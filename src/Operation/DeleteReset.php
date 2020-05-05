@@ -26,17 +26,19 @@ class DeleteReset implements Operation
         foreach ($dataSet->getReverseIterator() as $table) {
             /* @var $table ITable */
             $tname = $connection->quoteSchemaObject($table->getTableMetaData()->getTableName());
-            $query = "DELETE FROM {$tname}; ALTER TABLE {$tname} AUTO_INCREMENT=1;";
+            $delete_query = "DELETE FROM {$tname};";
+            $truncate_query = "ALTER TABLE {$tname} AUTO_INCREMENT=1;";
 
             try {
                 $this->disableForeignKeyChecksForMysql($connection);
-                $connection->getConnection()->query($query);
+                $connection->getConnection()->query($delete_query);
+                $connection->getConnection()->query($truncate_query);
                 $this->enableForeignKeyChecksForMysql($connection);
             } catch (\Exception $e) {
                 $this->enableForeignKeyChecksForMysql($connection);
 
                 if ($e instanceof PDOException) {
-                    throw new Exception('DELETE - RESET', $query, [], $table, $e->getMessage());
+                    throw new Exception('DELETE - RESET', "$delete_query $truncate_query", [], $table, $e->getMessage());
                 }
 
                 throw $e;
