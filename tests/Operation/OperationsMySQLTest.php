@@ -16,9 +16,13 @@ use PHPUnit\DbUnit\DataSet\DefaultTableMetadata;
 use PHPUnit\DbUnit\DataSet\FlatXmlDataSet;
 use PHPUnit\DbUnit\Operation\Truncate;
 use PHPUnit\DbUnit\TestCase;
+use PHPUnit\Framework\Attributes\CoversFunction;
+use PHPUnit\Framework\Attributes\UsesClass;
 
 require_once \dirname(__DIR__) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'DatabaseTestUtility.php';
 
+#[UsesClass('Truncate')]
+#[CoversFunction('Truncate::execute')]
 class Extensions_Database_Operation_OperationsMySQLTest extends TestCase
 {
     protected function setUp(): void
@@ -44,9 +48,6 @@ class Extensions_Database_Operation_OperationsMySQLTest extends TestCase
         return new FlatXmlDataSet(__DIR__ . '/../_files/XmlDataSets/OperationsMySQLTestFixture.xml');
     }
 
-    /**
-     * @covers Truncate::execute
-     */
     public function testTruncate(): void
     {
         $truncateOperation = new Truncate();

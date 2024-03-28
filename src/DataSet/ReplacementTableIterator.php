@@ -10,6 +10,7 @@
 
 namespace PHPUnit\DbUnit\DataSet;
 
+use Iterator;
 use OuterIterator;
 
 /**
@@ -97,7 +98,7 @@ class ReplacementTableIterator implements OuterIterator, ITableIterator
      *
      * @return ITable
      */
-    public function current()
+    public function current(): mixed
     {
         return new ReplacementTable($this->innerIterator->current(), $this->fullReplacements, $this->subStrReplacements);
     }
@@ -107,7 +108,7 @@ class ReplacementTableIterator implements OuterIterator, ITableIterator
      *
      * @return string
      */
-    public function key()
+    public function key(): mixed
     {
         return $this->current()->getTableMetaData()->getTableName();
     }
@@ -133,12 +134,12 @@ class ReplacementTableIterator implements OuterIterator, ITableIterator
      *
      * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
         return $this->innerIterator->valid();
     }
 
-    public function getInnerIterator()
+    public function getInnerIterator(): ?Iterator
     {
         return $this->innerIterator;
     }

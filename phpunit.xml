@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.0/phpunit.xsd" bootstrap="vendor/autoload.php" beStrictAboutOutputDuringTests="true" cacheDirectory=".phpunit.cache" beStrictAboutCoverageMetadata="true">
-  <coverage>
-    <include>
-      <directory suffix=".php">src</directory>
-    </include>
-  </coverage>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.0/phpunit.xsd" bootstrap="vendor/autoload.php" beStrictAboutOutputDuringTests="true" cacheDirectory=".phpunit.cache" beStrictAboutCoverageMetadata="true">
   <testsuite name="dbunit">
     <directory suffix="Test.php">tests/Constraint</directory>
     <directory suffix="Test.php">tests/DataSet</directory>
@@ -17,4 +12,9 @@
     <!--<const name="PHPUNIT_TESTSUITE_EXTENSION_DATABASE_MYSQL_USERNAME" value="root"/>-->
     <!--<const name="PHPUNIT_TESTSUITE_EXTENSION_DATABASE_MYSQL_PASSWORD" value=""/>-->
   </php>
+  <source>
+    <include>
+      <directory suffix=".php">src</directory>
+    </include>
+  </source>
 </phpunit>

@@ -112,37 +112,27 @@ class Extensions_Database_Operation_RowBasedTest extends TestCase
         $mockOperation->expects($this->at(0))
                 ->method('buildOperationQuery')
                 ->with($connection->createDataSet()->getTableMetaData('table1'), $table1)
-                ->will(
-                    $this->returnValue('INSERT INTO table1 (table1_id, column1, column2, column3, column4) VALUES (?, ?, ?, ?, ?)')
-                );
+                ->willReturn('INSERT INTO table1 (table1_id, column1, column2, column3, column4) VALUES (?, ?, ?, ?, ?)');
 
         $mockOperation->expects($this->at(1))
                 ->method('buildOperationArguments')
                 ->with($connection->createDataSet()->getTableMetaData('table1'), $table1, 0)
-                ->will(
-                    $this->returnValue([1, 'foo', 42, 4.2, 'bar'])
-                );
+                ->willReturn([1, 'foo', 42, 4.2, 'bar']);
 
         $mockOperation->expects($this->at(2))
                 ->method('buildOperationArguments')
                 ->with($connection->createDataSet()->getTableMetaData('table1'), $table1, 1)
-                ->will(
-                    $this->returnValue([2, 'qwerty', 23, 2.3, 'dvorak'])
-                );
+                ->willReturn([2, 'qwerty', 23, 2.3, 'dvorak']);
 
         $mockOperation->expects($this->at(3))
                 ->method('buildOperationQuery')
                 ->with($connection->createDataSet()->getTableMetaData('table2'), $table2)
-                ->will(
-                    $this->returnValue('INSERT INTO table2 (table2_id, column5, column6, column7, column8) VALUES (?, ?, ?, ?, ?)')
-                );
+                ->willReturn('INSERT INTO table2 (table2_id, column5, column6, column7, column8) VALUES (?, ?, ?, ?, ?)');
 
         $mockOperation->expects($this->at(4))
                 ->method('buildOperationArguments')
                 ->with($connection->createDataSet()->getTableMetaData('table2'), $table2, 0)
-                ->will(
-                    $this->returnValue([1, 'fdyhkn', 64, 4568.64, 'hkladfg'])
-                );
+                ->willReturn([1, 'fdyhkn', 64, 4568.64, 'hkladfg']);
 
         /* @var $mockOperation RowBased */
         $mockOperation->execute($connection, $dataSet);
@@ -156,20 +146,20 @@ class Extensions_Database_Operation_RowBasedTest extends TestCase
         $mockDatabaseDataSet->expects($this->never())->method('getTableMetaData');
 
         $mockConnection = $this->createMock(Connection::class);
-        $mockConnection->expects($this->once())->method('createDataSet')->will($this->returnValue($mockDatabaseDataSet));
+        $mockConnection->expects($this->once())->method('createDataSet')->willReturn($mockDatabaseDataSet);
 
         foreach (['getConnection', 'disablePrimaryKeys', 'enablePrimaryKeys'] as $method) {
             $mockConnection->expects($this->never())->method($method);
         }
 
         $mockTableMetaData = $this->createMock(ITableMetadata::class);
-        $mockTableMetaData->expects($this->any())->method('getTableName')->will($this->returnValue('table'));
+        $mockTableMetaData->expects($this->any())->method('getTableName')->willReturn('table');
         $mockTable = $this->createMock(ITable::class);
-        $mockTable->expects($this->any())->method('getTableMetaData')->will($this->returnValue($mockTableMetaData));
-        $mockTable->expects($this->once())->method('getRowCount')->will($this->returnValue(0));
+        $mockTable->expects($this->any())->method('getTableMetaData')->willReturn($mockTableMetaData);
+        $mockTable->expects($this->once())->method('getRowCount')->willReturn(0);
 
         $mockDataSet = $this->createMock(DefaultDataSet::class);
-        $mockDataSet->expects($this->once())->method('getIterator')->will($this->returnValue(new ArrayIterator([$mockTable])));
+        $mockDataSet->expects($this->once())->method('getIterator')->willReturn(new ArrayIterator([$mockTable]));
 
         $mockOperation = $this->createPartialMock(
             RowBased::class,
@@ -187,34 +177,34 @@ class Extensions_Database_Operation_RowBasedTest extends TestCase
 
         $rowCount          = 1;
         $mockTableMetaData = $this->createMock(ITableMetadata::class);
-        $mockTableMetaData->expects($this->any())->method('getTableName')->will($this->returnValue('table'));
+        $mockTableMetaData->expects($this->any())->method('getTableName')->willReturn('table');
         $mockTable = $this->createMock(ITable::class);
-        $mockTable->expects($this->any())->method('getTableMetaData')->will($this->returnValue($mockTableMetaData));
-        $mockTable->expects($this->once())->method('getRowCount')->will($this->returnValue($rowCount));
+        $mockTable->expects($this->any())->method('getTableMetaData')->willReturn($mockTableMetaData);
+        $mockTable->expects($this->once())->method('getRowCount')->willReturn($rowCount);
 
         $mockDatabaseDataSet = $this->createMock(DefaultDataSet::class);
-        $mockDatabaseDataSet->expects($this->once())->method('getTableMetaData')->will($this->returnValue($mockTableMetaData));
+        $mockDatabaseDataSet->expects($this->once())->method('getTableMetaData')->willReturn($mockTableMetaData);
 
         $mockPdoStatement = $this->createMock(PDOStatement::class);
         $mockPdoStatement->expects($this->once())->method('execute')->will($this->throwException(new Exception()));
         $mockPdoConnection = $this->createMock(PDO::class);
-        $mockPdoConnection->expects($this->once())->method('prepare')->will($this->returnValue($mockPdoStatement));
+        $mockPdoConnection->expects($this->once())->method('prepare')->willReturn($mockPdoStatement);
 
         $mockConnection = $this->createMock(Connection::class);
-        $mockConnection->expects($this->once())->method('createDataSet')->will($this->returnValue($mockDatabaseDataSet));
-        $mockConnection->expects($this->once())->method('getConnection')->will($this->returnValue($mockPdoConnection));
+        $mockConnection->expects($this->once())->method('createDataSet')->willReturn($mockDatabaseDataSet);
+        $mockConnection->expects($this->once())->method('getConnection')->willReturn($mockPdoConnection);
         $mockConnection->expects($this->never())->method('disablePrimaryKeys');
         $mockConnection->expects($this->never())->method('enablePrimaryKeys');
 
         $mockDataSet = $this->createMock(DefaultDataSet::class);
-        $mockDataSet->expects($this->once())->method('getIterator')->will($this->returnValue(new ArrayIterator([$mockTable])));
+        $mockDataSet->expects($this->once())->method('getIterator')->willReturn(new ArrayIterator([$mockTable]));
 
         $mockOperation = $this->createPartialMock(
             RowBased::class,
             ['buildOperationQuery', 'buildOperationArguments']
         );
-        $mockOperation->expects($this->once())->method('buildOperationQuery')->will($this->returnValue(''));
-        $mockOperation->expects($this->exactly($rowCount))->method('buildOperationArguments')->will($this->returnValue([]));
+        $mockOperation->expects($this->once())->method('buildOperationQuery')->willReturn('');
+        $mockOperation->expects($this->exactly($rowCount))->method('buildOperationArguments')->willReturn([]);
 
         $mockOperation->execute($mockConnection, $mockDataSet);
     }

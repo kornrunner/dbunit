@@ -13,6 +13,7 @@ use PHPUnit\DbUnit\DataSet\DefaultTable;
 use PHPUnit\DbUnit\DataSet\DefaultTableMetadata;
 use PHPUnit\DbUnit\DataSet\QueryTable;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class Extensions_Database_DataSet_QueryTableTest extends TestCase
 {
@@ -94,12 +95,11 @@ class Extensions_Database_DataSet_QueryTableTest extends TestCase
     }
 
     /**
-     * @dataProvider providerTestGetValue
-     *
      * @param mixed $row
      * @param mixed $column
      * @param mixed $value
      */
+    #[DataProvider('providerTestGetValue')]
     public function testGetValue($row, $column, $value): void
     {
         $this->assertEquals($value, $this->table->getValue($row, $column));
