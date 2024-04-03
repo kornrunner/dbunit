@@ -15,6 +15,12 @@ namespace PHPUnit\DbUnit\Database\Metadata;
  */
 class PgSQL extends AbstractMetadata
 {
+    /** @var array */
+    protected $columns;
+
+    /** @var array */
+    protected $keys;
+
     /**
      * Returns an array containing the names of all the tables in the database.
      *
