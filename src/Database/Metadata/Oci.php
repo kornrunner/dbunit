@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\Database\Metadata;
 
 /**
@@ -64,7 +63,7 @@ class Oci extends AbstractMetadata
 
     /**
      * Returns an array containing the names of all the columns in the
-     * $tableName table,
+     * $tableName table,.
      *
      * @param string $tableName
      *
@@ -118,7 +117,7 @@ class Oci extends AbstractMetadata
         $query = "SELECT DISTINCT COLUMN_NAME
                     FROM USER_TAB_COLUMNS
                    WHERE TABLE_NAME='" . $tableParts['table'] . "'
-                    $ownerQuery
+                    {$ownerQuery}
                    ORDER BY COLUMN_NAME";
 
         $result = $this->pdo->query($query);
@@ -131,7 +130,7 @@ class Oci extends AbstractMetadata
                        FROM user_constraints a, user_cons_columns b
                       WHERE a.constraint_type='P'
                         AND a.constraint_name=b.constraint_name
-                        $conOwnerQuery
+                        {$conOwnerQuery}
                         AND a.table_name = '" . $tableParts['table'] . "' ";
 
         $result = $this->pdo->query($keyQuery);

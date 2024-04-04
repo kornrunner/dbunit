@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit;
 
 /**
@@ -16,9 +15,7 @@ namespace PHPUnit\DbUnit;
 interface DatabaseListConsumer
 {
     /**
-     * Sets the database for the spec
-     *
-     * @param array $databases
+     * Sets the database for the spec.
      */
     public function setDatabases(array $databases);
 }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\DataSet\Specification;
 
 use PHPUnit\DbUnit\RuntimeException;
@@ -18,7 +17,7 @@ use PHPUnit\DbUnit\RuntimeException;
 class Factory implements IFactory
 {
     /**
-     * Returns the data set
+     * Returns the data set.
      *
      * @param string $type
      *
@@ -28,22 +27,22 @@ class Factory implements IFactory
     {
         switch ($type) {
             case 'xml':
-                return new Xml();
+                return new Xml;
 
             case 'flatxml':
-                return new FlatXml();
+                return new FlatXml;
 
             case 'csv':
-                return new Csv();
+                return new Csv;
 
             case 'yaml':
-                return new Yaml();
+                return new Yaml;
 
             case 'dbtable':
-                return new Table();
+                return new Table;
 
             case 'dbquery':
-                return new Query();
+                return new Query;
 
             default:
                 throw new RuntimeException("I don't know what you want from me.");

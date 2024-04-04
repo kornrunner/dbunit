@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,14 +7,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 use PHPUnit\DbUnit\DataSet\DefaultTable;
 use PHPUnit\DbUnit\DataSet\DefaultTableMetadata;
 use PHPUnit\DbUnit\DataSet\ITable;
 use PHPUnit\DbUnit\DataSet\ITableMetadata;
 use PHPUnit\DbUnit\DataSet\QueryTable;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Runner\Version;
 
 class Extensions_Database_DataSet_AbstractTableTest extends TestCase
 {
@@ -23,157 +23,12 @@ class Extensions_Database_DataSet_AbstractTableTest extends TestCase
      */
     protected $table;
 
-    public function setUp(): void
-    {
-        $tableMetaData = new DefaultTableMetadata(
-            'table',
-            ['id', 'column1']
-        );
-
-        $this->table = new DefaultTable($tableMetaData);
-
-        $this->table->addRow([
-            'id'      => 1,
-            'column1' => 'randomValue'
-        ]);
-    }
-
-    /**
-     * @param array $row
-     * @param bool  $exists
-     */
-    #[DataProvider('providerTableContainsRow')]
-    public function testTableContainsRow($row, $exists): void
-    {
-        $result = $this->table->assertContainsRow($row);
-        $this->assertEquals($exists, $result);
-    }
-
     public static function providerTableContainsRow()
     {
         return [
             [['id' => 1, 'column1' => 'randomValue'], true],
-            [['id' => 1, 'column1' => 'notExistingValue'], false]
+            [['id' => 1, 'column1' => 'notExistingValue'], false],
         ];
-    }
-
-    public function testMatchesWithNonMatchingMetaData(): void
-    {
-        $tableMetaData = $this->createMock(ITableMetadata::class);
-        $otherMetaData = $this->createMock(ITableMetadata::class);
-
-        $otherTable = $this->createMock(ITable::class);
-        $otherTable->expects($this->once())
-            ->method('getTableMetaData')
-            ->willReturn($otherMetaData);
-
-        $tableMetaData->expects($this->once())
-            ->method('matches')
-            ->with($otherMetaData)
-            ->willReturn(false);
-
-        $table = new DefaultTable($tableMetaData);
-        $this->assertFalse($table->matches($otherTable));
-    }
-
-    public function testMatchesWithNonMatchingRowCount(): void
-    {
-        $tableMetaData = $this->createMock(ITableMetadata::class);
-        $otherMetaData = $this->createMock(ITableMetadata::class);
-        $otherTable    = $this->createMock(ITable::class);
-
-        $phpUnitVersion = PHPUnit\Runner\Version::id();
-        if (version_compare($phpUnitVersion, '10.0.0', '>=')) {
-            $table = $this->getMockBuilder(DefaultTable::class)
-                      ->setConstructorArgs([$tableMetaData])
-                      ->onlyMethods(['getRowCount'])
-                      ->getMock();
-        } else {
-            $table = $this->getMockBuilder(DefaultTable::class)
-                      ->setConstructorArgs([$tableMetaData])
-                      ->setMethods(['getRowCount'])
-                      ->getMock();
-        }
-
-        $otherTable->expects($this->once())
-            ->method('getTableMetaData')
-            ->willReturn($otherMetaData);
-        $otherTable->expects($this->once())
-            ->method('getRowCount')
-            ->willReturn(0);
-
-        $tableMetaData->expects($this->once())
-            ->method('matches')
-            ->with($otherMetaData)
-            ->willReturn(true);
-
-        $table->expects($this->once())
-            ->method('getRowCount')
-            ->willReturn(1);
-        $this->assertFalse($table->matches($otherTable));
-    }
-
-    /**
-     * @param array $tableColumnValues
-     * @param array $otherColumnValues
-     * @param bool  $matches
-     */
-    #[DataProvider('providerMatchesWithColumnValueComparisons')]
-    public function testMatchesWithColumnValueComparisons($tableColumnValues, $otherColumnValues, $matches): void
-    {
-        $tableMetaData = $this->createMock(ITableMetadata::class);
-        $otherMetaData = $this->createMock(ITableMetadata::class);
-        $otherTable    = $this->createMock(ITable::class);
-
-        $phpUnitVersion = PHPUnit\Runner\Version::id();
-        if (version_compare($phpUnitVersion, '10.0.0', '>=')) {
-            $table = $this->getMockBuilder(DefaultTable::class)
-                      ->setConstructorArgs([$tableMetaData])
-                      ->onlyMethods(['getRowCount', 'getValue'])
-                      ->getMock();
-        } else {
-            $table = $this->getMockBuilder(DefaultTable::class)
-                      ->setConstructorArgs([$tableMetaData])
-                      ->setMethods(['getRowCount', 'getValue'])
-                      ->getMock();
-        }
-
-        $otherTable->expects($this->once())
-            ->method('getTableMetaData')
-            ->willReturn($otherMetaData);
-        $otherTable->expects($this->once())
-            ->method('getRowCount')
-            ->willReturn(\count($otherColumnValues));
-
-        $tableMetaData->expects($this->once())
-            ->method('getColumns')
-            ->willReturn(\array_keys(\reset($tableColumnValues)));
-        $tableMetaData->expects($this->once())
-            ->method('matches')
-            ->with($otherMetaData)
-            ->willReturn(true);
-
-        $table->expects($this->any())
-            ->method('getRowCount')
-            ->willReturn(\count($tableColumnValues));
-
-        $tableMap = [];
-        $otherMap = [];
-
-        foreach ($tableColumnValues as $rowIndex => $rowData) {
-            foreach ($rowData as $columnName => $columnValue) {
-                $tableMap[] = [$rowIndex, $columnName, $columnValue];
-                $otherMap[] = [$rowIndex, $columnName, $otherColumnValues[$rowIndex][$columnName]];
-            }
-        }
-        $table->expects($this->any())
-            ->method('getValue')
-            ->willReturnMap($tableMap);
-        $otherTable->expects($this->any())
-            ->method('getValue')
-            ->willReturnMap($otherMap);
-
-        $this->assertSame($matches, $table->matches($otherTable));
     }
 
     public static function providerMatchesWithColumnValueComparisons()
@@ -320,5 +175,152 @@ class Extensions_Database_DataSet_AbstractTableTest extends TestCase
                 false,
             ],
         ];
+    }
+
+    protected function setUp(): void
+    {
+        $tableMetaData = new DefaultTableMetadata(
+            'table',
+            ['id', 'column1'],
+        );
+
+        $this->table = new DefaultTable($tableMetaData);
+
+        $this->table->addRow([
+            'id'      => 1,
+            'column1' => 'randomValue',
+        ]);
+    }
+
+    /**
+     * @param array $row
+     * @param bool  $exists
+     */
+    #[DataProvider('providerTableContainsRow')]
+    public function testTableContainsRow($row, $exists): void
+    {
+        $result = $this->table->assertContainsRow($row);
+        $this->assertEquals($exists, $result);
+    }
+
+    public function testMatchesWithNonMatchingMetaData(): void
+    {
+        $tableMetaData = $this->createMock(ITableMetadata::class);
+        $otherMetaData = $this->createMock(ITableMetadata::class);
+
+        $otherTable = $this->createMock(ITable::class);
+        $otherTable->expects($this->once())
+            ->method('getTableMetaData')
+            ->willReturn($otherMetaData);
+
+        $tableMetaData->expects($this->once())
+            ->method('matches')
+            ->with($otherMetaData)
+            ->willReturn(false);
+
+        $table = new DefaultTable($tableMetaData);
+        $this->assertFalse($table->matches($otherTable));
+    }
+
+    public function testMatchesWithNonMatchingRowCount(): void
+    {
+        $tableMetaData = $this->createMock(ITableMetadata::class);
+        $otherMetaData = $this->createMock(ITableMetadata::class);
+        $otherTable    = $this->createMock(ITable::class);
+
+        $phpUnitVersion = Version::id();
+
+        if (\version_compare($phpUnitVersion, '10.0.0', '>=')) {
+            $table = $this->getMockBuilder(DefaultTable::class)
+                ->setConstructorArgs([$tableMetaData])
+                ->onlyMethods(['getRowCount'])
+                ->getMock();
+        } else {
+            $table = $this->getMockBuilder(DefaultTable::class)
+                ->setConstructorArgs([$tableMetaData])
+                ->setMethods(['getRowCount'])
+                ->getMock();
+        }
+
+        $otherTable->expects($this->once())
+            ->method('getTableMetaData')
+            ->willReturn($otherMetaData);
+        $otherTable->expects($this->once())
+            ->method('getRowCount')
+            ->willReturn(0);
+
+        $tableMetaData->expects($this->once())
+            ->method('matches')
+            ->with($otherMetaData)
+            ->willReturn(true);
+
+        $table->expects($this->once())
+            ->method('getRowCount')
+            ->willReturn(1);
+        $this->assertFalse($table->matches($otherTable));
+    }
+
+    /**
+     * @param array $tableColumnValues
+     * @param array $otherColumnValues
+     * @param bool  $matches
+     */
+    #[DataProvider('providerMatchesWithColumnValueComparisons')]
+    public function testMatchesWithColumnValueComparisons($tableColumnValues, $otherColumnValues, $matches): void
+    {
+        $tableMetaData = $this->createMock(ITableMetadata::class);
+        $otherMetaData = $this->createMock(ITableMetadata::class);
+        $otherTable    = $this->createMock(ITable::class);
+
+        $phpUnitVersion = Version::id();
+
+        if (\version_compare($phpUnitVersion, '10.0.0', '>=')) {
+            $table = $this->getMockBuilder(DefaultTable::class)
+                ->setConstructorArgs([$tableMetaData])
+                ->onlyMethods(['getRowCount', 'getValue'])
+                ->getMock();
+        } else {
+            $table = $this->getMockBuilder(DefaultTable::class)
+                ->setConstructorArgs([$tableMetaData])
+                ->setMethods(['getRowCount', 'getValue'])
+                ->getMock();
+        }
+
+        $otherTable->expects($this->once())
+            ->method('getTableMetaData')
+            ->willReturn($otherMetaData);
+        $otherTable->expects($this->once())
+            ->method('getRowCount')
+            ->willReturn(\count($otherColumnValues));
+
+        $tableMetaData->expects($this->once())
+            ->method('getColumns')
+            ->willReturn(\array_keys(\reset($tableColumnValues)));
+        $tableMetaData->expects($this->once())
+            ->method('matches')
+            ->with($otherMetaData)
+            ->willReturn(true);
+
+        $table->expects($this->any())
+            ->method('getRowCount')
+            ->willReturn(\count($tableColumnValues));
+
+        $tableMap = [];
+        $otherMap = [];
+
+        foreach ($tableColumnValues as $rowIndex => $rowData) {
+            foreach ($rowData as $columnName => $columnValue) {
+                $tableMap[] = [$rowIndex, $columnName, $columnValue];
+                $otherMap[] = [$rowIndex, $columnName, $otherColumnValues[$rowIndex][$columnName]];
+            }
+        }
+        $table->expects($this->any())
+            ->method('getValue')
+            ->willReturnMap($tableMap);
+        $otherTable->expects($this->any())
+            ->method('getValue')
+            ->willReturnMap($otherMap);
+
+        $this->assertSame($matches, $table->matches($otherTable));
     }
 }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,9 +7,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\DataSet;
 
+use function array_fill_keys;
+use function array_replace;
 use PHPUnit\DbUnit\InvalidArgumentException;
 
 /**
@@ -18,9 +19,7 @@ use PHPUnit\DbUnit\InvalidArgumentException;
 class DefaultTable extends AbstractTable
 {
     /**
-     * Creates a new table object using the given $tableMetaData
-     *
-     * @param ITableMetadata $tableMetaData
+     * Creates a new table object using the given $tableMetaData.
      */
     public function __construct(ITableMetadata $tableMetaData)
     {
@@ -35,16 +34,14 @@ class DefaultTable extends AbstractTable
      */
     public function addRow($values = []): void
     {
-        $this->data[] = \array_replace(
-            \array_fill_keys($this->getTableMetaData()->getColumns(), null),
-            $values
+        $this->data[] = array_replace(
+            array_fill_keys($this->getTableMetaData()->getColumns(), null),
+            $values,
         );
     }
 
     /**
      * Adds the rows in the passed table to the current table.
-     *
-     * @param ITable $table
      */
     public function addTableRows(ITable $table): void
     {

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,9 +7,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\DataSet\Specification;
 
+use function explode;
+use function str_split;
 use PHPUnit\DbUnit\DataSet\CsvDataSet;
 use ReflectionClass;
 
@@ -62,9 +63,9 @@ class Csv implements Specification
      */
     protected function getCsvOptions($dataSetSpec)
     {
-        [$csvOptStr] = \explode('|', $dataSetSpec, 2);
+        [$csvOptStr] = explode('|', $dataSetSpec, 2);
 
-        return \str_split($csvOptStr);
+        return str_split($csvOptStr);
     }
 
     /**
@@ -82,9 +83,9 @@ class Csv implements Specification
     {
         $tables = [];
 
-        foreach (\explode(',', $dataSetSpec) as $csvfile) {
-            [$tableName, $file]     = \explode(':', $csvfile, 2);
-            $tables[$tableName]     = $file;
+        foreach (explode(',', $dataSetSpec) as $csvfile) {
+            [$tableName, $file] = explode(':', $csvfile, 2);
+            $tables[$tableName] = $file;
         }
 
         return $tables;

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,8 +7,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\DataSet;
+
+use function array_diff;
+use function array_intersect;
+use function array_merge;
+use function array_unique;
+use function array_values;
 
 /**
  * A TableMetaData decorator that allows filtering columns from another
@@ -44,8 +49,7 @@ class TableMetadataFilter extends AbstractTableMetadata
      * Creates a new filtered table meta data object filtering out
      * $excludeColumns.
      *
-     * @param ITableMetadata $originalMetaData
-     * @param array          $excludeColumns   - Deprecated. Use the set* methods instead.
+     * @param array $excludeColumns - Deprecated. Use the set* methods instead.
      */
     public function __construct(ITableMetadata $originalMetaData, array $excludeColumns = [])
     {
@@ -61,11 +65,11 @@ class TableMetadataFilter extends AbstractTableMetadata
     public function getColumns()
     {
         if (!empty($this->includeColumns)) {
-            return \array_values(\array_intersect($this->originalMetaData->getColumns(), $this->includeColumns));
+            return array_values(array_intersect($this->originalMetaData->getColumns(), $this->includeColumns));
         }
 
         if (!empty($this->excludeColumns)) {
-            return \array_values(\array_diff($this->originalMetaData->getColumns(), $this->excludeColumns));
+            return array_values(array_diff($this->originalMetaData->getColumns(), $this->excludeColumns));
         }
 
         return $this->originalMetaData->getColumns();
@@ -93,12 +97,10 @@ class TableMetadataFilter extends AbstractTableMetadata
 
     /**
      * Sets the columns to include in the table.
-     *
-     * @param array $includeColumns
      */
     public function addIncludeColumns(array $includeColumns): void
     {
-        $this->includeColumns = \array_unique(\array_merge($this->includeColumns, $includeColumns));
+        $this->includeColumns = array_unique(array_merge($this->includeColumns, $includeColumns));
     }
 
     /**
@@ -111,12 +113,10 @@ class TableMetadataFilter extends AbstractTableMetadata
 
     /**
      * Sets the columns to exclude from the table.
-     *
-     * @param array $excludeColumns
      */
     public function addExcludeColumns(array $excludeColumns): void
     {
-        $this->excludeColumns = \array_unique(\array_merge($this->excludeColumns, $excludeColumns));
+        $this->excludeColumns = array_unique(array_merge($this->excludeColumns, $excludeColumns));
     }
 
     /**

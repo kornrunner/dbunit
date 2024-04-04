@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,9 +7,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\DataSet;
 
+use function array_combine;
+use function count;
+use function fgetcsv;
+use function fopen;
+use function is_file;
+use function is_readable;
+use function version_compare;
 use PHPUnit\DbUnit\InvalidArgumentException;
 
 /**
@@ -40,7 +46,7 @@ class CsvDataSet extends AbstractDataSet
     protected $escape = '"';
 
     /**
-     * Creates a new CSV dataset
+     * Creates a new CSV dataset.
      *
      * You can pass in the parameters for how csv files will be read.
      *
@@ -56,7 +62,7 @@ class CsvDataSet extends AbstractDataSet
     }
 
     /**
-     * Adds a table to the dataset
+     * Adds a table to the dataset.
      *
      * The table will be given the passed name. $csvFile should be a path to
      * a valid csv file (based on the arguments passed to the constructor.)
@@ -66,17 +72,17 @@ class CsvDataSet extends AbstractDataSet
      */
     public function addTable($tableName, $csvFile): void
     {
-        if (!\is_file($csvFile)) {
+        if (!is_file($csvFile)) {
             throw new InvalidArgumentException("Could not find csv file: {$csvFile}");
         }
 
-        if (!\is_readable($csvFile)) {
+        if (!is_readable($csvFile)) {
             throw new InvalidArgumentException("Could not read csv file: {$csvFile}");
         }
 
-        $fh           = \fopen($csvFile, 'r');
+        $fh           = fopen($csvFile, 'r');
         $columns      = $this->getCsvRow($fh);
-        $columnsCount = \count($columns);
+        $columnsCount = count($columns);
 
         if ($columns === false) {
             throw new InvalidArgumentException("Could not determine the headers from the given file {$csvFile}");
@@ -88,10 +94,10 @@ class CsvDataSet extends AbstractDataSet
         $rowNumber = 1;
 
         while (($row = $this->getCsvRow($fh)) !== false) {
-            if ($columnsCount !== \count($row)) {
+            if ($columnsCount !== count($row)) {
                 throw new InvalidArgumentException("Row no. {$rowNumber} in csv file {$csvFile} should have an equal number of elements as table {$tableName}");
             }
-            $table->addRow(\array_combine($columns, $row));
+            $table->addRow(array_combine($columns, $row));
             $rowNumber++;
         }
 
@@ -120,10 +126,10 @@ class CsvDataSet extends AbstractDataSet
      */
     protected function getCsvRow($fh)
     {
-        if (\version_compare(PHP_VERSION, '5.3.0', '>')) {
-            return \fgetcsv($fh, null, $this->delimiter, $this->enclosure, $this->escape);
+        if (version_compare(PHP_VERSION, '5.3.0', '>')) {
+            return fgetcsv($fh, null, $this->delimiter, $this->enclosure, $this->escape);
         }
 
-        return \fgetcsv($fh, null, $this->delimiter, $this->enclosure);
+        return fgetcsv($fh, null, $this->delimiter, $this->enclosure);
     }
 }

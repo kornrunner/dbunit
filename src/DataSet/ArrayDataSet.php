@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,9 +7,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\DataSet;
 
+use function array_keys;
 use PHPUnit\DbUnit\InvalidArgumentException;
 
 /**
@@ -34,9 +34,7 @@ class ArrayDataSet extends AbstractDataSet
      *         array("id" => 1, "name" => "...", "address" => "..."),
      *         array("id" => 2, "name" => "...", "address" => "...")
      *     )
-     * )
-     *
-     * @param array $data
+     * ).
      */
     public function __construct(array $data)
     {
@@ -44,7 +42,7 @@ class ArrayDataSet extends AbstractDataSet
             $columns = [];
 
             if (isset($rows[0])) {
-                $columns = \array_keys($rows[0]);
+                $columns = array_keys($rows[0]);
             }
 
             $metaData = new DefaultTableMetadata($tableName, $columns);
@@ -60,7 +58,7 @@ class ArrayDataSet extends AbstractDataSet
     public function getTable($tableName)
     {
         if (!isset($this->tables[$tableName])) {
-            throw new InvalidArgumentException("$tableName is not a table in the current database.");
+            throw new InvalidArgumentException("{$tableName} is not a table in the current database.");
         }
 
         return $this->tables[$tableName];

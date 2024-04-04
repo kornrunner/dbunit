@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\Database\Metadata;
 
 /**
@@ -24,7 +23,7 @@ interface Metadata
 
     /**
      * Returns an array containing the names of all the columns in the
-     * $tableName table,
+     * $tableName table,.
      *
      * @param string $tableName
      *
@@ -50,7 +49,7 @@ interface Metadata
     public function getSchema();
 
     /**
-     * Returns a quoted schema object. (table name, column name, etc)
+     * Returns a quoted schema object. (table name, column name, etc).
      *
      * @param string $object
      *
@@ -59,21 +58,21 @@ interface Metadata
     public function quoteSchemaObject($object);
 
     /**
-     * Returns true if the rdbms allows cascading
+     * Returns true if the rdbms allows cascading.
      *
      * @return bool
      */
     public function allowsCascading();
 
     /**
-     * Disables primary keys if rdbms does not allow setting them otherwise
+     * Disables primary keys if rdbms does not allow setting them otherwise.
      *
      * @param string $tableName
      */
     public function disablePrimaryKeys($tableName);
 
     /**
-     * Reenables primary keys after they have been disabled
+     * Reenables primary keys after they have been disabled.
      *
      * @param string $tableName
      */

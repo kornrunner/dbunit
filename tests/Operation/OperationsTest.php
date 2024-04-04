@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 use PHPUnit\DbUnit\Database\DefaultConnection;
 use PHPUnit\DbUnit\DataSet\DefaultDataSet;
 use PHPUnit\DbUnit\DataSet\DefaultTable;
@@ -46,7 +45,7 @@ class Extensions_Database_Operation_OperationsTest extends TestCase
 
     public function testDelete(): void
     {
-        $deleteOperation = new Delete();
+        $deleteOperation = new Delete;
 
         $deleteOperation->execute($this->getConnection(), new FlatXmlDataSet(__DIR__ . '/../_files/XmlDataSets/DeleteOperationTest.xml'));
 
@@ -55,7 +54,7 @@ class Extensions_Database_Operation_OperationsTest extends TestCase
 
     public function testDeleteAll(): void
     {
-        $deleteAllOperation = new DeleteAll();
+        $deleteAllOperation = new DeleteAll;
 
         $deleteAllOperation->execute($this->getConnection(), new FlatXmlDataSet(__DIR__ . '/../_files/XmlDataSets/DeleteAllOperationTest.xml'));
 
@@ -63,20 +62,20 @@ class Extensions_Database_Operation_OperationsTest extends TestCase
             new DefaultTable(
                 new DefaultTableMetadata(
                     'table1',
-                    ['table1_id', 'column1', 'column2', 'column3', 'column4']
-                )
+                    ['table1_id', 'column1', 'column2', 'column3', 'column4'],
+                ),
             ),
             new DefaultTable(
                 new DefaultTableMetadata(
                     'table2',
-                    ['table2_id', 'column5', 'column6', 'column7', 'column8']
-                )
+                    ['table2_id', 'column5', 'column6', 'column7', 'column8'],
+                ),
             ),
             new DefaultTable(
                 new DefaultTableMetadata(
                     'table3',
-                    ['table3_id', 'column9', 'column10', 'column11', 'column12']
-                )
+                    ['table3_id', 'column9', 'column10', 'column11', 'column12'],
+                ),
             ),
         ]);
 
@@ -85,7 +84,7 @@ class Extensions_Database_Operation_OperationsTest extends TestCase
 
     public function testTruncate(): void
     {
-        $truncateOperation = new Truncate();
+        $truncateOperation = new Truncate;
 
         $truncateOperation->execute($this->getConnection(), new FlatXmlDataSet(__DIR__ . '/../_files/XmlDataSets/DeleteAllOperationTest.xml'));
 
@@ -93,20 +92,20 @@ class Extensions_Database_Operation_OperationsTest extends TestCase
             new DefaultTable(
                 new DefaultTableMetadata(
                     'table1',
-                    ['table1_id', 'column1', 'column2', 'column3', 'column4']
-                )
+                    ['table1_id', 'column1', 'column2', 'column3', 'column4'],
+                ),
             ),
             new DefaultTable(
                 new DefaultTableMetadata(
                     'table2',
-                    ['table2_id', 'column5', 'column6', 'column7', 'column8']
-                )
+                    ['table2_id', 'column5', 'column6', 'column7', 'column8'],
+                ),
             ),
             new DefaultTable(
                 new DefaultTableMetadata(
                     'table3',
-                    ['table3_id', 'column9', 'column10', 'column11', 'column12']
-                )
+                    ['table3_id', 'column9', 'column10', 'column11', 'column12'],
+                ),
             ),
         ]);
 
@@ -115,7 +114,7 @@ class Extensions_Database_Operation_OperationsTest extends TestCase
 
     public function testInsert(): void
     {
-        $insertOperation = new Insert();
+        $insertOperation = new Insert;
 
         $insertOperation->execute($this->getConnection(), new FlatXmlDataSet(__DIR__ . '/../_files/XmlDataSets/InsertOperationTest.xml'));
 
@@ -124,7 +123,7 @@ class Extensions_Database_Operation_OperationsTest extends TestCase
 
     public function testUpdate(): void
     {
-        $updateOperation = new Update();
+        $updateOperation = new Update;
 
         $updateOperation->execute($this->getConnection(), new FlatXmlDataSet(__DIR__ . '/../_files/XmlDataSets/UpdateOperationTest.xml'));
 
@@ -133,7 +132,7 @@ class Extensions_Database_Operation_OperationsTest extends TestCase
 
     public function testReplace(): void
     {
-        $replaceOperation = new Replace();
+        $replaceOperation = new Replace;
 
         $replaceOperation->execute($this->getConnection(), new FlatXmlDataSet(__DIR__ . '/../_files/XmlDataSets/ReplaceOperationTest.xml'));
 
@@ -142,7 +141,7 @@ class Extensions_Database_Operation_OperationsTest extends TestCase
 
     public function testInsertEmptyTable(): void
     {
-        $insertOperation = new Insert();
+        $insertOperation = new Insert;
 
         $insertOperation->execute($this->getConnection(), new FlatXmlDataSet(__DIR__ . '/../_files/XmlDataSets/EmptyTableInsertTest.xml'));
 
@@ -151,7 +150,7 @@ class Extensions_Database_Operation_OperationsTest extends TestCase
 
     public function testInsertAllEmptyTables(): void
     {
-        $insertOperation = new Insert();
+        $insertOperation = new Insert;
 
         $insertOperation->execute($this->getConnection(), new FlatXmlDataSet(__DIR__ . '/../_files/XmlDataSets/AllEmptyTableInsertTest.xml'));
 

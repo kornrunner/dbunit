@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,9 +7,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\DataSet;
 
+use function array_keys;
 use PHPUnit\DbUnit\Database\Connection;
 use PHPUnit\DbUnit\Database\Table;
 use PHPUnit\DbUnit\Database\TableIterator;
@@ -36,8 +36,6 @@ class QueryDataSet extends AbstractDataSet
 
     /**
      * Creates a new dataset using the given database connection.
-     *
-     * @param Connection $databaseConnection
      */
     public function __construct(Connection $databaseConnection)
     {
@@ -63,20 +61,20 @@ class QueryDataSet extends AbstractDataSet
     public function getTable($tableName)
     {
         if (!isset($this->tables[$tableName])) {
-            throw new InvalidArgumentException("$tableName is not a table in the current database.");
+            throw new InvalidArgumentException("{$tableName} is not a table in the current database.");
         }
 
         return $this->tables[$tableName];
     }
 
     /**
-     * Returns a list of table names for the database
+     * Returns a list of table names for the database.
      *
      * @return array
      */
     public function getTableNames()
     {
-        return \array_keys($this->tables);
+        return array_keys($this->tables);
     }
 
     /**

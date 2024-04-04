@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\Operation;
 
 /**
@@ -16,13 +15,13 @@ namespace PHPUnit\DbUnit\Operation;
 class Factory
 {
     /**
-     * Returns a null database operation
+     * Returns a null database operation.
      *
      * @return Operation
      */
     public static function NONE()
     {
-        return new None();
+        return new None;
     }
 
     /**
@@ -37,7 +36,7 @@ class Factory
     {
         return new Composite([
             self::TRUNCATE($cascadeTruncates),
-            self::INSERT()
+            self::INSERT(),
         ]);
     }
 
@@ -45,7 +44,7 @@ class Factory
     {
         return new Composite([
             self::DELETE_RESET(),
-            self::INSERT()
+            self::INSERT(),
         ]);
     }
 
@@ -56,7 +55,7 @@ class Factory
      */
     public static function INSERT()
     {
-        return new Insert();
+        return new Insert;
     }
 
     /**
@@ -68,7 +67,7 @@ class Factory
      */
     public static function TRUNCATE($cascadeTruncates = false)
     {
-        $truncate = new Truncate();
+        $truncate = new Truncate;
         $truncate->setCascade($cascadeTruncates);
 
         return $truncate;
@@ -81,7 +80,7 @@ class Factory
      */
     public static function DELETE()
     {
-        return new Delete();
+        return new Delete;
     }
 
     /**
@@ -91,7 +90,7 @@ class Factory
      */
     public static function DELETE_ALL()
     {
-        return new DeleteAll();
+        return new DeleteAll;
     }
 
     /**
@@ -101,7 +100,7 @@ class Factory
      */
     public static function DELETE_RESET()
     {
-        return new DeleteReset();
+        return new DeleteReset;
     }
 
     /**
@@ -111,6 +110,6 @@ class Factory
      */
     public static function UPDATE()
     {
-        return new Update();
+        return new Update;
     }
 }

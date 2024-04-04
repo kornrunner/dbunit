@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,9 +7,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\Database;
 
+use function array_keys;
+use function count;
 use PDO;
 use PDOStatement;
 use PHPUnit\DbUnit\DataSet\AbstractTable;
@@ -28,15 +29,14 @@ class ResultSetTable extends AbstractTable
     /**
      * Creates a new result set table.
      *
-     * @param string       $tableName
-     * @param PDOStatement $pdoStatement
+     * @param string $tableName
      */
     public function __construct($tableName, PDOStatement $pdoStatement)
     {
         $this->data = $pdoStatement->fetchAll(PDO::FETCH_ASSOC);
 
-        if (\count($this->data)) {
-            $columns = \array_keys($this->data[0]);
+        if (count($this->data)) {
+            $columns = array_keys($this->data[0]);
         } else {
             $columns = [];
         }

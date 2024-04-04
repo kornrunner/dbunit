@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 use PHPUnit\DbUnit\Database\DefaultConnection;
 use PHPUnit\DbUnit\DataSet\CompositeDataSet;
 use PHPUnit\DbUnit\DataSet\DefaultDataSet;
@@ -50,27 +49,27 @@ class Extensions_Database_Operation_OperationsMySQLTest extends TestCase
 
     public function testTruncate(): void
     {
-        $truncateOperation = new Truncate();
+        $truncateOperation = new Truncate;
         $truncateOperation->execute($this->getConnection(), $this->getDataSet());
 
         $expectedDataSet = new DefaultDataSet([
             new DefaultTable(
                 new DefaultTableMetadata(
                     'table1',
-                    ['table1_id', 'column1', 'column2', 'column3', 'column4']
-                )
+                    ['table1_id', 'column1', 'column2', 'column3', 'column4'],
+                ),
             ),
             new DefaultTable(
                 new DefaultTableMetadata(
                     'table2',
-                    ['table2_id', 'table1_id', 'column5', 'column6', 'column7', 'column8']
-                )
+                    ['table2_id', 'table1_id', 'column5', 'column6', 'column7', 'column8'],
+                ),
             ),
             new DefaultTable(
                 new DefaultTableMetadata(
                     'table3',
-                    ['table3_id', 'table2_id', 'column9', 'column10', 'column11', 'column12']
-                )
+                    ['table3_id', 'table2_id', 'column9', 'column10', 'column11', 'column12'],
+                ),
             ),
         ]);
 
@@ -79,7 +78,7 @@ class Extensions_Database_Operation_OperationsMySQLTest extends TestCase
 
     public function getCompositeDataSet()
     {
-        $compositeDataset = new CompositeDataSet();
+        $compositeDataset = new CompositeDataSet;
 
         $dataset = $this->createXMLDataSet(__DIR__ . '/../_files/XmlDataSets/TruncateCompositeTest.xml');
         $compositeDataset->addDataSet($dataset);
@@ -89,27 +88,27 @@ class Extensions_Database_Operation_OperationsMySQLTest extends TestCase
 
     public function testTruncateComposite(): void
     {
-        $truncateOperation = new Truncate();
+        $truncateOperation = new Truncate;
         $truncateOperation->execute($this->getConnection(), $this->getCompositeDataSet());
 
         $expectedDataSet = new DefaultDataSet([
             new DefaultTable(
                 new DefaultTableMetadata(
                     'table1',
-                    ['table1_id', 'column1', 'column2', 'column3', 'column4']
-                )
+                    ['table1_id', 'column1', 'column2', 'column3', 'column4'],
+                ),
             ),
             new DefaultTable(
                 new DefaultTableMetadata(
                     'table2',
-                    ['table2_id', 'table1_id', 'column5', 'column6', 'column7', 'column8']
-                )
+                    ['table2_id', 'table1_id', 'column5', 'column6', 'column7', 'column8'],
+                ),
             ),
             new DefaultTable(
                 new DefaultTableMetadata(
                     'table3',
-                    ['table3_id', 'table2_id', 'column9', 'column10', 'column11', 'column12']
-                )
+                    ['table3_id', 'table2_id', 'column9', 'column10', 'column11', 'column12'],
+                ),
             ),
         ]);
 

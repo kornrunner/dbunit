@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\Database\Metadata;
 
 /**
@@ -63,7 +62,7 @@ class Dblib extends AbstractMetadata
 
     /**
      * Returns an array containing the names of all the columns in the
-     * $tableName table,
+     * $tableName table,.
      *
      * @param string $tableName
      *
@@ -114,7 +113,7 @@ class Dblib extends AbstractMetadata
         }
 
         $keyQuery = "SELECT COL_NAME(ic.OBJECT_ID,ic.column_id) AS ColumnName
-			FROM    sys.indexes AS i INNER JOIN 
+			FROM    sys.indexes AS i INNER JOIN
 				sys.index_columns AS ic ON  i.OBJECT_ID = ic.OBJECT_ID
 						        AND i.index_id = ic.index_id
 			WHERE   i.is_primary_key = 1 AND OBJECT_NAME(ic.OBJECT_ID) = '" . $tableName . "'";

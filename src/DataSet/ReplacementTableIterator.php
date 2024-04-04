@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,16 +7,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\DataSet;
 
 use Iterator;
 use OuterIterator;
 
 /**
- * The default table iterator
+ * The default table iterator.
  */
-class ReplacementTableIterator implements OuterIterator, ITableIterator
+class ReplacementTableIterator implements ITableIterator, OuterIterator
 {
     /**
      * @var ITableIterator
@@ -35,10 +34,6 @@ class ReplacementTableIterator implements OuterIterator, ITableIterator
 
     /**
      * Creates a new replacement table iterator object.
-     *
-     * @param ITableIterator $innerIterator
-     * @param array          $fullReplacements
-     * @param array          $subStrReplacements
      */
     public function __construct(ITableIterator $innerIterator, array $fullReplacements = [], array $subStrReplacements = [])
     {
@@ -48,7 +43,7 @@ class ReplacementTableIterator implements OuterIterator, ITableIterator
     }
 
     /**
-     * Adds a new full replacement
+     * Adds a new full replacement.
      *
      * Full replacements will only replace values if the FULL value is a match
      *
@@ -61,7 +56,7 @@ class ReplacementTableIterator implements OuterIterator, ITableIterator
     }
 
     /**
-     * Adds a new substr replacement
+     * Adds a new substr replacement.
      *
      * Substr replacements will replace all occurances of the substr in every column
      *
@@ -122,7 +117,7 @@ class ReplacementTableIterator implements OuterIterator, ITableIterator
     }
 
     /**
-     * Rewinds to the first element
+     * Rewinds to the first element.
      */
     public function rewind(): void
     {
@@ -130,9 +125,7 @@ class ReplacementTableIterator implements OuterIterator, ITableIterator
     }
 
     /**
-     * Returns true if the current index is valid
-     *
-     * @return bool
+     * Returns true if the current index is valid.
      */
     public function valid(): bool
     {

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,8 +7,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\DataSet;
+
+use function sort;
+use ReturnTypeWillChange;
 
 /**
  * Implements the basic functionality of data sets.
@@ -79,7 +81,7 @@ abstract class AbstractDataSet implements IDataSet
      *
      * @return ITableIterator
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function getIterator()
     {
         return $this->createIterator();
@@ -90,7 +92,7 @@ abstract class AbstractDataSet implements IDataSet
      *
      * @return ITableIterator
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function getReverseIterator()
     {
         return $this->createIterator(true);
@@ -98,16 +100,14 @@ abstract class AbstractDataSet implements IDataSet
 
     /**
      * Asserts that the given data set matches this data set.
-     *
-     * @param IDataSet $other
      */
     public function matches(IDataSet $other)
     {
         $thisTableNames  = $this->getTableNames();
         $otherTableNames = $other->getTableNames();
 
-        \sort($thisTableNames);
-        \sort($otherTableNames);
+        sort($thisTableNames);
+        sort($otherTableNames);
 
         if ($thisTableNames != $otherTableNames) {
             return false;
@@ -132,6 +132,6 @@ abstract class AbstractDataSet implements IDataSet
      *
      * @return ITableIterator
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     abstract protected function createIterator($reverse = false);
 }

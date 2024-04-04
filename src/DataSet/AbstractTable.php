@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,14 +7,23 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\DataSet;
 
+use function count;
+use function in_array;
+use function is_numeric;
+use function mb_strlen;
+use function mb_substr;
+use function sprintf;
+use function str_pad;
+use function str_repeat;
+use function strlen;
+use function var_export;
 use PHPUnit\DbUnit\InvalidArgumentException;
 use SimpleXMLElement;
 
 /**
- * Provides a basic functionality for dbunit tables
+ * Provides a basic functionality for dbunit tables.
  */
 class AbstractTable implements ITable
 {
@@ -38,20 +47,20 @@ class AbstractTable implements ITable
     public function __toString()
     {
         $columns = $this->getTableMetaData()->getColumns();
-        $count   = \count($columns);
+        $count   = count($columns);
 
         // if count less than 0 (when table is empty), then set count to 1
         $count         = $count >= 1 ? $count : 1;
-        $lineSeparator = \str_repeat('+----------------------', $count) . "+\n";
-        $lineLength    = \strlen($lineSeparator) - 1;
+        $lineSeparator = str_repeat('+----------------------', $count) . "+\n";
+        $lineLength    = strlen($lineSeparator) - 1;
 
         $tableString = $lineSeparator;
         $tblName     = $this->getTableMetaData()->getTableName();
-        $tableString .= '| ' . \str_pad(
+        $tableString .= '| ' . str_pad(
             $tblName,
             $lineLength - 4,
             ' ',
-                STR_PAD_RIGHT
+            STR_PAD_RIGHT,
         ) . " |\n";
         $tableString .= $lineSeparator;
         $rows = $this->rowToString($columns);
@@ -66,10 +75,10 @@ class AbstractTable implements ITable
                 if ($this->other) {
                     try {
                         if ($this->getValue($i, $columnName) != $this->other->getValue($i, $columnName)) {
-                            $values[] = \sprintf(
+                            $values[] = sprintf(
                                 '%s != actual %s',
-                                \var_export($this->getValue($i, $columnName), true),
-                                \var_export($this->other->getValue($i, $columnName), true)
+                                var_export($this->getValue($i, $columnName), true),
+                                var_export($this->other->getValue($i, $columnName), true),
                             );
                         } else {
                             $values[] = $this->getValue($i, $columnName);
@@ -105,7 +114,7 @@ class AbstractTable implements ITable
      */
     public function getRowCount()
     {
-        return \count($this->data);
+        return count($this->data);
     }
 
     /**
@@ -124,11 +133,10 @@ class AbstractTable implements ITable
             return ($value instanceof SimpleXMLElement) ? (string) $value : $value;
         }
 
-        if (!\in_array($column, $this->getTableMetaData()->getColumns()) || $this->getRowCount() <= $row) {
+        if (!in_array($column, $this->getTableMetaData()->getColumns(), true) || $this->getRowCount() <= $row) {
             throw new InvalidArgumentException("The given row ({$row}) and column ({$column}) do not exist in table {$this->getTableMetaData()->getTableName()}");
         }
 
-        return;
     }
 
     /**
@@ -148,13 +156,10 @@ class AbstractTable implements ITable
             throw new InvalidArgumentException("The given row ({$row}) does not exist in table {$this->getTableMetaData()->getTableName()}");
         }
 
-        return;
     }
 
     /**
      * Asserts that the given table matches this table.
-     *
-     * @param ITable $other
      */
     public function matches(ITable $other)
     {
@@ -175,7 +180,7 @@ class AbstractTable implements ITable
                 $thisValue  = $this->getValue($i, $columnName);
                 $otherValue = $other->getValue($i, $columnName);
 
-                if (\is_numeric($thisValue) && \is_numeric($otherValue)) {
+                if (is_numeric($thisValue) && is_numeric($otherValue)) {
                     if ($thisValue != $otherValue) {
                         $this->other = $other;
 
@@ -193,21 +198,17 @@ class AbstractTable implements ITable
     }
 
     /**
-     * Checks if a given row is in the table
-     *
-     * @param array $row
+     * Checks if a given row is in the table.
      *
      * @return bool
      */
     public function assertContainsRow(array $row)
     {
-        return \in_array($row, $this->data);
+        return in_array($row, $this->data, true);
     }
 
     /**
      * Sets the metadata for this table.
-     *
-     * @param ITableMetadata $tableMetaData
      *
      * @deprecated
      */
@@ -225,16 +226,14 @@ class AbstractTable implements ITable
                 $value = 'NULL';
             }
 
-            $value_str = \mb_substr($value, 0, 20);
+            $value_str = mb_substr($value, 0, 20);
 
             // make str_pad act in multibyte manner
-            $correction = \strlen($value_str) - \mb_strlen($value_str);
-            $rowString .= '| ' . \str_pad($value_str, 20 + $correction, ' ', STR_PAD_BOTH) . ' ';
+            $correction = strlen($value_str) - mb_strlen($value_str);
+            $rowString .= '| ' . str_pad($value_str, 20 + $correction, ' ', STR_PAD_BOTH) . ' ';
         }
 
         /** @see https://github.com/sebastianbergmann/dbunit/issues/195 */
-        $rowString = !empty($row) ? $rowString . "|\n" : '';
-
-        return $rowString;
+        return !empty($row) ? $rowString . "|\n" : '';
     }
 }

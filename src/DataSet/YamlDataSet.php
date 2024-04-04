@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,8 +7,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\DataSet;
+
+use function array_key_exists;
+use function array_keys;
+use function array_merge;
+use function array_unique;
+use function array_values;
+use function is_array;
 
 /**
  * Creates YamlDataSets.
@@ -28,7 +34,7 @@ class YamlDataSet extends AbstractDataSet
     protected $parser;
 
     /**
-     * Creates a new YAML dataset
+     * Creates a new YAML dataset.
      *
      * @param string      $yamlFile
      * @param IYamlParser $parser
@@ -36,7 +42,7 @@ class YamlDataSet extends AbstractDataSet
     public function __construct($yamlFile, $parser = null)
     {
         if ($parser == null) {
-            $parser = new SymfonyYamlParser();
+            $parser = new SymfonyYamlParser;
         }
         $this->parser = $parser;
         $this->addYamlFile($yamlFile);
@@ -56,20 +62,20 @@ class YamlDataSet extends AbstractDataSet
                 $rows = [];
             }
 
-            if (!\is_array($rows)) {
+            if (!is_array($rows)) {
                 continue;
             }
 
-            if (!\array_key_exists($tableName, $this->tables)) {
+            if (!array_key_exists($tableName, $this->tables)) {
                 $columns = $this->getColumns($rows);
 
                 $tableMetaData = new DefaultTableMetadata(
                     $tableName,
-                    $columns
+                    $columns,
                 );
 
                 $this->tables[$tableName] = new DefaultTable(
-                    $tableMetaData
+                    $tableMetaData,
                 );
             }
 
@@ -91,7 +97,7 @@ class YamlDataSet extends AbstractDataSet
     {
         return new DefaultTableIterator(
             $this->tables,
-            $reverse
+            $reverse,
         );
     }
 
@@ -112,9 +118,9 @@ class YamlDataSet extends AbstractDataSet
         $columns = [];
 
         foreach ($rows as $row) {
-            $columns = \array_merge($columns, \array_keys($row));
+            $columns = array_merge($columns, array_keys($row));
         }
 
-        return \array_values(\array_unique($columns));
+        return array_values(array_unique($columns));
     }
 }

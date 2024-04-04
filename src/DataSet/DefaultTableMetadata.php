@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,13 +7,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\DataSet;
 
+use function in_array;
 use PHPUnit\DbUnit\InvalidArgumentException;
 
 /**
- * The default implementation of table meta data
+ * The default implementation of table meta data.
  */
 class DefaultTableMetadata extends AbstractTableMetadata
 {
@@ -21,8 +21,6 @@ class DefaultTableMetadata extends AbstractTableMetadata
      * Creates a new default table meta data object.
      *
      * @param string $tableName
-     * @param array  $columns
-     * @param array  $primaryKeys
      */
     public function __construct($tableName, array $columns, array $primaryKeys = [])
     {
@@ -31,7 +29,7 @@ class DefaultTableMetadata extends AbstractTableMetadata
         $this->primaryKeys = [];
 
         foreach ($primaryKeys as $columnName) {
-            if (!\in_array($columnName, $this->columns)) {
+            if (!in_array($columnName, $this->columns, true)) {
                 throw new InvalidArgumentException('Primary key column passed that is not in the column list.');
             }
             $this->primaryKeys[] = $columnName;

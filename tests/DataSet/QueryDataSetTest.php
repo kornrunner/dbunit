@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 use PHPUnit\DbUnit\Database\DefaultConnection;
 use PHPUnit\DbUnit\DataSet\DefaultTable;
 use PHPUnit\DbUnit\DataSet\DefaultTableMetadata;
@@ -21,10 +20,9 @@ class Extensions_Database_DataSet_QueryDataSetTest extends TestCase
      * @var QueryDataSet
      */
     protected $dataSet;
-
     protected $pdo;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->pdo = DBUnitTestUtility::getSQLiteMemoryDB();
         parent::setUp();
@@ -44,7 +42,7 @@ class Extensions_Database_DataSet_QueryDataSetTest extends TestCase
         $expectedTable1 = $this->getConnection()->createDataSet(['table1'])->getTable('table1');
 
         $expectedTable2 = new DefaultTable(
-            new DefaultTableMetadata('query1', ['tc1', 'tc2'])
+            new DefaultTableMetadata('query1', ['tc1', 'tc2']),
         );
 
         $expectedTable2->addRow(['tc1' => 'bar', 'tc2' => 'blah']);
@@ -63,7 +61,7 @@ class Extensions_Database_DataSet_QueryDataSetTest extends TestCase
         $expectedTable1 = $this->getConnection()->createDataSet(['table1'])->getTable('table1');
 
         $expectedTable2 = new DefaultTable(
-            new DefaultTableMetadata('query1', ['tc1', 'tc2'])
+            new DefaultTableMetadata('query1', ['tc1', 'tc2']),
         );
 
         $expectedTable2->addRow(['tc1' => 'bar', 'tc2' => 'blah']);
@@ -75,10 +73,12 @@ class Extensions_Database_DataSet_QueryDataSetTest extends TestCase
                     $this->assertTablesEqual($expectedTable1, $table);
 
                     break;
+
                 case 'query1':
                     $this->assertTablesEqual($expectedTable2, $table);
 
                     break;
+
                 default:
                     $this->fail('Proper keys not present from the iterator');
             }

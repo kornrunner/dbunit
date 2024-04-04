@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 class DBUnitTestUtility
 {
     protected static $connection;
@@ -24,7 +23,7 @@ class DBUnitTestUtility
     }
 
     /**
-     * Creates connection to test MySQL database
+     * Creates connection to test MySQL database.
      *
      * MySQL server must be installed locally, with root access
      * and empty password and listening on unix socket
@@ -49,38 +48,38 @@ class DBUnitTestUtility
         $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         $connection->exec(
-          'CREATE TABLE IF NOT EXISTS table1 (
+            'CREATE TABLE IF NOT EXISTS table1 (
             table1_id INTEGER PRIMARY KEY AUTOINCREMENT,
             column1 VARCHAR(20),
             column2 INT(10),
             column3 DECIMAL(6,2),
             column4 TEXT
-          )'
+          )',
         );
 
         $connection->exec(
-          'CREATE TABLE IF NOT EXISTS table2 (
+            'CREATE TABLE IF NOT EXISTS table2 (
             table2_id INTEGER PRIMARY KEY AUTOINCREMENT,
             column5 VARCHAR(20),
             column6 INT(10),
             column7 DECIMAL(6,2),
             column8 TEXT
-          )'
+          )',
         );
 
         $connection->exec(
-          'CREATE TABLE IF NOT EXISTS table3 (
+            'CREATE TABLE IF NOT EXISTS table3 (
             table3_id INTEGER PRIMARY KEY AUTOINCREMENT,
             column9 VARCHAR(20),
             column10 INT(10),
             column11 DECIMAL(6,2),
             column12 TEXT
-          )'
+          )',
         );
     }
 
     /**
-     * Creates default testing schema for MySQL database
+     * Creates default testing schema for MySQL database.
      *
      * Tables must containt foreign keys and use InnoDb storage engine
      * for constraint tests to be executed properly
@@ -92,7 +91,7 @@ class DBUnitTestUtility
     protected static function setUpMySqlDatabase(PDO $connection): void
     {
         $connection->exec(
-          'CREATE TABLE IF NOT EXISTS table1 (
+            'CREATE TABLE IF NOT EXISTS table1 (
             table1_id INTEGER AUTO_INCREMENT,
             column1 VARCHAR(20),
             column2 INT(10),
@@ -100,11 +99,11 @@ class DBUnitTestUtility
             column4 TEXT,
             PRIMARY KEY (table1_id)
           ) ENGINE=INNODB;
-        '
+        ',
         );
 
         $connection->exec(
-          'CREATE TABLE IF NOT EXISTS table2 (
+            'CREATE TABLE IF NOT EXISTS table2 (
             table2_id INTEGER AUTO_INCREMENT,
             table1_id INTEGER,
             column5 VARCHAR(20),
@@ -114,11 +113,11 @@ class DBUnitTestUtility
             PRIMARY KEY (table2_id),
             FOREIGN KEY (table1_id) REFERENCES table1(table1_id)
           ) ENGINE=INNODB;
-        '
+        ',
         );
 
         $connection->exec(
-          'CREATE TABLE IF NOT EXISTS table3 (
+            'CREATE TABLE IF NOT EXISTS table3 (
             table3_id INTEGER AUTO_INCREMENT,
             table2_id INTEGER,
             column9 VARCHAR(20),
@@ -128,7 +127,7 @@ class DBUnitTestUtility
             PRIMARY KEY (table3_id),
             FOREIGN KEY (table2_id) REFERENCES table2(table2_id)
           ) ENGINE=INNODB;
-        '
+        ',
         );
     }
 }

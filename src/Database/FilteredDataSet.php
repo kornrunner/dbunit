@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\Database;
 
 /**
@@ -22,8 +21,6 @@ class FilteredDataSet extends DataSet
 
     /**
      * Creates a new dataset using the given database connection.
-     *
-     * @param Connection $databaseConnection
      */
     public function __construct(Connection $databaseConnection, array $tableNames)
     {
@@ -32,7 +29,7 @@ class FilteredDataSet extends DataSet
     }
 
     /**
-     * Returns a list of table names for the database
+     * Returns a list of table names for the database.
      *
      * @return array
      */

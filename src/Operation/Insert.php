@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,9 +7,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\Operation;
 
+use function array_fill;
+use function count;
+use function implode;
+use function substr;
 use PHPUnit\DbUnit\Database\Connection;
 use PHPUnit\DbUnit\DataSet\ITable;
 use PHPUnit\DbUnit\DataSet\ITableMetadata;
@@ -23,10 +26,10 @@ class Insert extends RowBased
 
     protected function buildOperationQuery(ITableMetadata $databaseTableMetaData, ITable $table, Connection $connection)
     {
-        $columnCount = \count($table->getTableMetaData()->getColumns());
+        $columnCount = count($table->getTableMetaData()->getColumns());
 
         if ($columnCount > 0) {
-            $placeHolders = \implode(', ', \array_fill(0, $columnCount, '?'));
+            $placeHolders = implode(', ', array_fill(0, $columnCount, '?'));
 
             $columns = '';
 
@@ -34,16 +37,14 @@ class Insert extends RowBased
                 $columns .= $connection->quoteSchemaObject($column) . ', ';
             }
 
-            $columns = \substr($columns, 0, -2);
+            $columns = substr($columns, 0, -2);
 
-            $query = "
+            return "
                 INSERT INTO {$connection->quoteSchemaObject($table->getTableMetaData()->getTableName())}
                 ({$columns})
                 VALUES
                 ({$placeHolders})
             ";
-
-            return $query;
         }
 
         return false;
@@ -62,7 +63,7 @@ class Insert extends RowBased
 
     protected function disablePrimaryKeys(ITableMetadata $databaseTableMetaData, ITable $table, Connection $connection)
     {
-        if (\count($databaseTableMetaData->getPrimaryKeys())) {
+        if (count($databaseTableMetaData->getPrimaryKeys())) {
             return true;
         }
 

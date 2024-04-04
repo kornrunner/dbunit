@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,9 +7,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\Database\Metadata;
 
+use function class_exists;
+use function explode;
+use function implode;
+use function str_replace;
+use function strpos;
+use function substr;
 use PDO;
 use PHPUnit\DbUnit\RuntimeException;
 use ReflectionClass;
@@ -28,11 +33,11 @@ abstract class AbstractMetadata implements Metadata
         'sqlite2'  => Sqlite::class,
         'sqlsrv'   => SqlSrv::class,
         'firebird' => Firebird::class,
-        'dblib'    => Dblib::class
+        'dblib'    => Dblib::class,
     ];
 
     /**
-     * The PDO connection used to retreive database meta data
+     * The PDO connection used to retreive database meta data.
      *
      * @var PDO
      */
@@ -59,7 +64,6 @@ abstract class AbstractMetadata implements Metadata
      * Creates a meta data object based on the driver of given $pdo object and
      * $schema name.
      *
-     * @param PDO    $pdo
      * @param string $schema
      *
      * @return AbstractMetadata
@@ -96,7 +100,7 @@ abstract class AbstractMetadata implements Metadata
      */
     public static function registerClassWithDriver($className, $pdoDriver)
     {
-        if (!\class_exists($className)) {
+        if (!class_exists($className)) {
             throw new RuntimeException("Specified class for {$pdoDriver} driver ({$className}) does not exist.");
         }
 
@@ -113,7 +117,6 @@ abstract class AbstractMetadata implements Metadata
      * Creates a new database meta data object using the given pdo connection
      * and schema name.
      *
-     * @param PDO    $pdo
      * @param string $schema
      */
     final public function __construct(PDO $pdo, $schema = '')
@@ -133,7 +136,7 @@ abstract class AbstractMetadata implements Metadata
     }
 
     /**
-     * Returns a quoted schema object. (table name, column name, etc)
+     * Returns a quoted schema object. (table name, column name, etc).
      *
      * @param string $object
      *
@@ -141,16 +144,16 @@ abstract class AbstractMetadata implements Metadata
      */
     public function quoteSchemaObject($object)
     {
-        $parts       = \explode('.', $object);
+        $parts       = explode('.', $object);
         $quotedParts = [];
 
         foreach ($parts as $part) {
             $quotedParts[] = $this->schemaObjectQuoteChar .
-                \str_replace($this->schemaObjectQuoteChar, $this->schemaObjectQuoteChar . $this->schemaObjectQuoteChar, $part) .
+                str_replace($this->schemaObjectQuoteChar, $this->schemaObjectQuoteChar . $this->schemaObjectQuoteChar, $part) .
                 $this->schemaObjectQuoteChar;
         }
 
-        return \implode('.', $quotedParts);
+        return implode('.', $quotedParts);
     }
 
     /**
@@ -164,17 +167,17 @@ abstract class AbstractMetadata implements Metadata
      */
     public function splitTableName($fullTableName)
     {
-        if (($dot = \strpos($fullTableName, '.')) !== false) {
+        if (($dot = strpos($fullTableName, '.')) !== false) {
             return [
-                'schema' => \substr($fullTableName, 0, $dot),
-                'table'  => \substr($fullTableName, $dot + 1)
+                'schema' => substr($fullTableName, 0, $dot),
+                'table'  => substr($fullTableName, $dot + 1),
             ];
         }
 
         return [
-                'schema' => null,
-                'table'  => $fullTableName
-            ];
+            'schema' => null,
+            'table'  => $fullTableName,
+        ];
     }
 
     /**
@@ -188,7 +191,7 @@ abstract class AbstractMetadata implements Metadata
     }
 
     /**
-     * Returns true if the rdbms allows cascading
+     * Returns true if the rdbms allows cascading.
      *
      * @return bool
      */
@@ -198,22 +201,22 @@ abstract class AbstractMetadata implements Metadata
     }
 
     /**
-     * Disables primary keys if the rdbms does not allow setting them otherwise
+     * Disables primary keys if the rdbms does not allow setting them otherwise.
      *
      * @param string $tableName
      */
     public function disablePrimaryKeys($tableName): void
     {
-        return;
+
     }
 
     /**
-     * Reenables primary keys after they have been disabled
+     * Reenables primary keys after they have been disabled.
      *
      * @param string $tableName
      */
     public function enablePrimaryKeys($tableName): void
     {
-        return;
+
     }
 }

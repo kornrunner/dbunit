@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\Database\Metadata;
 
 use PDO;
@@ -68,7 +67,7 @@ class SqlSrv extends AbstractMetadata
         $query = "SELECT c.name
                     FROM syscolumns c
                LEFT JOIN sysobjects o ON c.id = o.id
-                   WHERE o.name = '$tableName'";
+                   WHERE o.name = '{$tableName}'";
 
         $statement = $this->pdo->prepare($query);
         $statement->execute();
@@ -92,7 +91,7 @@ class SqlSrv extends AbstractMetadata
      */
     public function getTablePrimaryKeys($tableName)
     {
-        $query     = "EXEC sp_statistics '$tableName'";
+        $query     = "EXEC sp_statistics '{$tableName}'";
         $statement = $this->pdo->prepare($query);
         $statement->execute();
         $statement->setFetchMode(PDO::FETCH_ASSOC);
@@ -116,7 +115,7 @@ class SqlSrv extends AbstractMetadata
     public function disablePrimaryKeys($tableName): void
     {
         try {
-            $query = "SET IDENTITY_INSERT $tableName ON";
+            $query = "SET IDENTITY_INSERT {$tableName} ON";
             $this->pdo->exec($query);
         } catch (PDOException $e) {
             // ignore the error here - can happen if primary key is not an identity
@@ -131,7 +130,7 @@ class SqlSrv extends AbstractMetadata
     public function enablePrimaryKeys($tableName): void
     {
         try {
-            $query = "SET IDENTITY_INSERT $tableName OFF";
+            $query = "SET IDENTITY_INSERT {$tableName} OFF";
             $this->pdo->exec($query);
         } catch (PDOException $e) {
             // ignore the error here - can happen if primary key is not an identity

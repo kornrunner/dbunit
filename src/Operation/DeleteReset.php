@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,9 +7,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\Operation;
 
+use function sprintf;
 use PDO;
 use PDOException;
 use PHPUnit\DbUnit\Database\Connection;
@@ -17,7 +17,7 @@ use PHPUnit\DbUnit\DataSet\IDataSet;
 use PHPUnit\DbUnit\DataSet\ITable;
 
 /**
- * Executes a truncate replacement to speed up things (delete from ...; alter table auto_increment = 1;)
+ * Executes a truncate replacement to speed up things (delete from ...; alter table auto_increment = 1;).
  */
 class DeleteReset implements Operation
 {

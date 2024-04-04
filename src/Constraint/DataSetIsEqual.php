@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,9 +7,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\Constraint;
 
+use function get_class_methods;
+use function get_parent_class;
+use function in_array;
+use function sprintf;
 use PHPUnit\DbUnit\DataSet\IDataSet;
 use PHPUnit\DbUnit\InvalidArgumentException;
 use PHPUnit\Framework\Constraint\Constraint;
@@ -31,12 +34,10 @@ class DataSetIsEqual extends Constraint
 
     /**
      * Creates a new constraint.
-     *
-     * @param IDataSet $value
      */
     public function __construct(IDataSet $value)
     {
-        if (in_array('__construct', get_class_methods(get_parent_class($this)))) {
+        if (in_array('__construct', get_class_methods(get_parent_class($this)), true)) {
             parent::__construct();
         }
         $this->value = $value;
@@ -44,14 +45,12 @@ class DataSetIsEqual extends Constraint
 
     /**
      * Returns a string representation of the constraint.
-     *
-     * @return string
      */
     public function toString(): string
     {
-        return \sprintf(
+        return sprintf(
             'is equal to expected %s',
-            $this->value->__toString()
+            $this->value->__toString(),
         );
     }
 
@@ -62,14 +61,12 @@ class DataSetIsEqual extends Constraint
      * This method can be overridden to implement the evaluation algorithm.
      *
      * @param mixed $other value or object to evaluate
-     *
-     * @return bool
      */
     protected function matches($other): bool
     {
         if (!$other instanceof IDataSet) {
             throw new InvalidArgumentException(
-                'PHPUnit_Extensions_Database_DataSet_IDataSet expected'
+                'PHPUnit_Extensions_Database_DataSet_IDataSet expected',
             );
         }
 
@@ -77,14 +74,12 @@ class DataSetIsEqual extends Constraint
     }
 
     /**
-     * Returns the description of the failure
+     * Returns the description of the failure.
      *
      * The beginning of failure messages is "Failed asserting that" in most
      * cases. This method should return the second part of that sentence.
      *
      * @param mixed $other evaluated value or object
-     *
-     * @return string
      */
     protected function failureDescription($other): string
     {
