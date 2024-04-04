@@ -211,7 +211,7 @@ class ReplacementTable implements ITable
         }
 
         if (count($this->subStrReplacements) && isset($value)) {
-            return str_replace(array_keys($this->subStrReplacements), array_values($this->subStrReplacements), $value);
+            return str_replace(array_keys($this->subStrReplacements), array_values($this->subStrReplacements), is_scalar($value) ? (string) $value : $value);
         }
 
         return $value;
