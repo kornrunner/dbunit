@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,9 +7,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\Database;
 
+use function current;
+use function end;
+use function next;
+use function prev;
+use function reset;
 use PHPUnit\DbUnit\DataSet\ITable;
 use PHPUnit\DbUnit\DataSet\ITableIterator;
 use PHPUnit\DbUnit\DataSet\ITableMetadata;
@@ -77,7 +81,7 @@ class TableIterator implements ITableIterator
      */
     public function current()
     {
-        $tableName = \current($this->tableNames);
+        $tableName = current($this->tableNames);
 
         return $this->dataSet->getTable($tableName);
     }
@@ -98,31 +102,31 @@ class TableIterator implements ITableIterator
     public function next(): void
     {
         if ($this->reverse) {
-            \prev($this->tableNames);
+            prev($this->tableNames);
         } else {
-            \next($this->tableNames);
+            next($this->tableNames);
         }
     }
 
     /**
-     * Rewinds to the first element
+     * Rewinds to the first element.
      */
     public function rewind(): void
     {
         if ($this->reverse) {
-            \end($this->tableNames);
+            end($this->tableNames);
         } else {
-            \reset($this->tableNames);
+            reset($this->tableNames);
         }
     }
 
     /**
-     * Returns true if the current index is valid
+     * Returns true if the current index is valid.
      *
      * @return bool
      */
     public function valid()
     {
-        return \current($this->tableNames) !== false;
+        return current($this->tableNames) !== false;
     }
 }

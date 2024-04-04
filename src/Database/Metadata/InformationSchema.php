@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\Database\Metadata;
 
 /**
@@ -16,8 +15,7 @@ namespace PHPUnit\DbUnit\Database\Metadata;
 class InformationSchema extends AbstractMetadata
 {
     protected $columns = [];
-
-    protected $keys = [];
+    protected $keys    = [];
 
     /**
      * Returns an array containing the names of all the tables in the database.
@@ -50,7 +48,7 @@ class InformationSchema extends AbstractMetadata
 
     /**
      * Returns an array containing the names of all the columns in the
-     * $tableName table,
+     * $tableName table,.
      *
      * @param string $tableName
      *

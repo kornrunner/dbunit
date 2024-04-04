@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,9 +7,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\Database;
 
+use function array_map;
+use function count;
+use function implode;
+use function in_array;
 use PHPUnit\DbUnit\DataSet\AbstractDataSet;
 use PHPUnit\DbUnit\DataSet\DefaultTableMetadata;
 use PHPUnit\DbUnit\DataSet\ITableMetadata;
@@ -38,11 +41,9 @@ class DataSet extends AbstractDataSet
     /**
      * Creates the query necessary to pull all of the data from a table.
      *
-     * @param ITableMetadata $tableMetaData
-     *
      * @return string
      */
-    public static function buildTableSelect(ITableMetadata $tableMetaData, Connection $databaseConnection = null)
+    public static function buildTableSelect(ITableMetadata $tableMetaData, ?Connection $databaseConnection = null)
     {
         if ($tableMetaData->getTableName() == '') {
             $e = new RuntimeException('Empty Table Name');
@@ -54,9 +55,9 @@ class DataSet extends AbstractDataSet
         $columns = $tableMetaData->getColumns();
 
         if ($databaseConnection) {
-            $columns = \array_map([$databaseConnection, 'quoteSchemaObject'], $columns);
+            $columns = array_map([$databaseConnection, 'quoteSchemaObject'], $columns);
         }
-        $columnList = \implode(', ', $columns);
+        $columnList = implode(', ', $columns);
 
         if ($databaseConnection) {
             $tableName = $databaseConnection->quoteSchemaObject($tableMetaData->getTableName());
@@ -67,11 +68,11 @@ class DataSet extends AbstractDataSet
         $primaryKeys = $tableMetaData->getPrimaryKeys();
 
         if ($databaseConnection) {
-            $primaryKeys = \array_map([$databaseConnection, 'quoteSchemaObject'], $primaryKeys);
+            $primaryKeys = array_map([$databaseConnection, 'quoteSchemaObject'], $primaryKeys);
         }
 
-        if (\count($primaryKeys)) {
-            $orderBy = 'ORDER BY ' . \implode(' ASC, ', $primaryKeys) . ' ASC';
+        if (count($primaryKeys)) {
+            $orderBy = 'ORDER BY ' . implode(' ASC, ', $primaryKeys) . ' ASC';
         } else {
             $orderBy = '';
         }
@@ -81,8 +82,6 @@ class DataSet extends AbstractDataSet
 
     /**
      * Creates a new dataset using the given database connection.
-     *
-     * @param Connection $databaseConnection
      */
     public function __construct(Connection $databaseConnection)
     {
@@ -98,8 +97,8 @@ class DataSet extends AbstractDataSet
      */
     public function getTable($tableName)
     {
-        if (!\in_array($tableName, $this->getTableNames())) {
-            throw new InvalidArgumentException("$tableName is not a table in the current database.");
+        if (!in_array($tableName, $this->getTableNames(), true)) {
+            throw new InvalidArgumentException("{$tableName} is not a table in the current database.");
         }
 
         if (empty($this->tables[$tableName])) {
@@ -122,7 +121,7 @@ class DataSet extends AbstractDataSet
     }
 
     /**
-     * Returns a list of table names for the database
+     * Returns a list of table names for the database.
      *
      * @return array
      */

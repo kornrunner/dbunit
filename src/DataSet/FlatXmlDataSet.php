@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,9 +7,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\DataSet;
 
+use function count;
+use function in_array;
 use PHPUnit\DbUnit\RuntimeException;
 
 /**
@@ -34,14 +35,14 @@ class FlatXmlDataSet extends AbstractXmlDataSet
             $values = [];
 
             foreach ($row->attributes() as $name => $value) {
-                if (!\in_array($name, $tableColumns[$tableName])) {
+                if (!in_array($name, $tableColumns[$tableName], true)) {
                     $tableColumns[$tableName][] = $name;
                 }
 
                 $values[$name] = $value;
             }
 
-            if (\count($values)) {
+            if (count($values)) {
                 $tableValues[$tableName][] = $values;
             }
         }

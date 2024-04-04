@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,9 +7,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\DataSet\Specification;
 
+use function explode;
 use PHPUnit\DbUnit\Database\DefaultConnection;
 use PHPUnit\DbUnit\DatabaseListConsumer;
 use PHPUnit\DbUnit\DataSet\DefaultDataSet;
@@ -38,7 +38,7 @@ use ReflectionClass;
  * The column names in the table will be identical to the column aliases in the
  * query.
  */
-class Query implements Specification, DatabaseListConsumer
+class Query implements DatabaseListConsumer, Specification
 {
     /**
      * @var array
@@ -46,9 +46,7 @@ class Query implements Specification, DatabaseListConsumer
     protected $databases = [];
 
     /**
-     * Sets the database for the spec
-     *
-     * @param array $databases
+     * Sets the database for the spec.
      */
     public function setDatabases(array $databases): void
     {
@@ -64,11 +62,11 @@ class Query implements Specification, DatabaseListConsumer
      */
     public function getDataSet($dataSetSpec)
     {
-        [$dbLabel, $schema, $table, $sql]     = \explode(':', $dataSetSpec, 4);
-        $databaseInfo                         = $this->databases[$dbLabel];
+        [$dbLabel, $schema, $table, $sql] = explode(':', $dataSetSpec, 4);
+        $databaseInfo                     = $this->databases[$dbLabel];
 
         $pdoRflc      = new ReflectionClass('PDO');
-        $pdo          = $pdoRflc->newInstanceArgs(\explode('|', $databaseInfo));
+        $pdo          = $pdoRflc->newInstanceArgs(explode('|', $databaseInfo));
         $dbConnection = new DefaultConnection($pdo, $schema);
         $table        = $dbConnection->createQueryTable($table, $sql);
 

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\Database\Metadata;
 
 /**
@@ -52,7 +51,7 @@ class PgSQL extends AbstractMetadata
 
     /**
      * Returns an array containing the names of all the columns in the
-     * $tableName table,
+     * $tableName table,.
      *
      * @param string $tableName
      *
@@ -99,7 +98,7 @@ class PgSQL extends AbstractMetadata
     }
 
     /**
-     * Returns true if the rdbms allows cascading
+     * Returns true if the rdbms allows cascading.
      *
      * @return bool
      */

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\DataSet;
 
 /**
@@ -33,13 +32,9 @@ class ReplacementDataSet extends AbstractDataSet
     protected $subStrReplacements;
 
     /**
-     * Creates a new replacement dataset
+     * Creates a new replacement dataset.
      *
      * You can pass in any data set that implements PHPUnit_Extensions_Database_DataSet_IDataSet
-     *
-     * @param string $delimiter
-     * @param string $enclosure
-     * @param string $escape
      */
     public function __construct(IDataSet $dataSet, array $fullReplacements = [], array $subStrReplacements = [])
     {
@@ -49,7 +44,7 @@ class ReplacementDataSet extends AbstractDataSet
     }
 
     /**
-     * Adds a new full replacement
+     * Adds a new full replacement.
      *
      * Full replacements will only replace values if the FULL value is a match
      *
@@ -62,7 +57,7 @@ class ReplacementDataSet extends AbstractDataSet
     }
 
     /**
-     * Adds a new substr replacement
+     * Adds a new substr replacement.
      *
      * Substr replacements will replace all occurances of the substr in every column
      *

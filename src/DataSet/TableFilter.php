@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,9 +7,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\DataSet;
 
+use function in_array;
 use PHPUnit\DbUnit\InvalidArgumentException;
 
 /**
@@ -25,9 +25,9 @@ class TableFilter extends AbstractTable
     protected $originalTable;
 
     /**
-     * Creates a new table filter using the original table
+     * Creates a new table filter using the original table.
      *
-     * @param $originalTable ITable
+     * @param $originalTable  ITable
      * @param $excludeColumns array @deprecated, use the set* methods instead
      */
     public function __construct(ITable $originalTable, array $excludeColumns = [])
@@ -71,7 +71,7 @@ class TableFilter extends AbstractTable
      */
     public function getValue($row, $column)
     {
-        if (\in_array($column, $this->getTableMetaData()->getColumns())) {
+        if (in_array($column, $this->getTableMetaData()->getColumns(), true)) {
             return $this->originalTable->getValue($row, $column);
         }
 
@@ -80,8 +80,6 @@ class TableFilter extends AbstractTable
 
     /**
      * Sets the columns to include in the table.
-     *
-     * @param array $includeColumns
      */
     public function addIncludeColumns(array $includeColumns): void
     {
@@ -98,8 +96,6 @@ class TableFilter extends AbstractTable
 
     /**
      * Sets the columns to exclude from the table.
-     *
-     * @param array $excludeColumns
      */
     public function addExcludeColumns(array $excludeColumns): void
     {
@@ -115,9 +111,7 @@ class TableFilter extends AbstractTable
     }
 
     /**
-     * Checks if a given row is in the table
-     *
-     * @param array $row
+     * Checks if a given row is in the table.
      *
      * @return bool
      */
@@ -129,7 +123,7 @@ class TableFilter extends AbstractTable
     }
 
     /**
-     * Loads data into local data table if it's not already loaded
+     * Loads data into local data table if it's not already loaded.
      */
     protected function loadData(): void
     {

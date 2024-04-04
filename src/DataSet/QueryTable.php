@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,9 +7,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\DataSet;
 
+use function array_keys;
 use PDO;
 use PHPUnit\DbUnit\Database\Connection;
 
@@ -36,10 +36,8 @@ class QueryTable extends AbstractTable
     /**
      * Creates a new database query table object.
      *
-     * @param string     $table_name
-     * @param string     $query
-     * @param Connection $databaseConnection
-     * @param mixed      $tableName
+     * @param mixed  $tableName
+     * @param string $query
      */
     public function __construct($tableName, $query, Connection $databaseConnection)
     {
@@ -61,9 +59,7 @@ class QueryTable extends AbstractTable
     }
 
     /**
-     * Checks if a given row is in the table
-     *
-     * @param array $row
+     * Checks if a given row is in the table.
      *
      * @return bool
      */
@@ -115,8 +111,6 @@ class QueryTable extends AbstractTable
 
     /**
      * Asserts that the given table matches this table.
-     *
-     * @param ITable $other
      */
     public function matches(ITable $other)
     {
@@ -143,7 +137,7 @@ class QueryTable extends AbstractTable
 
             if (isset($this->data[0])) {
                 // get column names from data
-                $columns = \array_keys($this->data[0]);
+                $columns = array_keys($this->data[0]);
             } else {
                 $columns = $this->databaseConnection->getMetaData()->getTableColumns($this->tableName);
             }

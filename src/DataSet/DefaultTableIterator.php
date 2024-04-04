@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,11 +7,17 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\DataSet;
 
+use function current;
+use function end;
+use function next;
+use function prev;
+use function reset;
+use ReturnTypeWillChange;
+
 /**
- * The default table iterator
+ * The default table iterator.
  */
 class DefaultTableIterator implements ITableIterator
 {
@@ -33,8 +39,7 @@ class DefaultTableIterator implements ITableIterator
     /**
      * Creates a new default table iterator object.
      *
-     * @param array $tables
-     * @param bool  $reverse
+     * @param bool $reverse
      */
     public function __construct(array $tables, $reverse = false)
     {
@@ -69,10 +74,10 @@ class DefaultTableIterator implements ITableIterator
      *
      * @return ITable
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function current()
     {
-        return \current($this->tables);
+        return current($this->tables);
     }
 
     /**
@@ -80,7 +85,7 @@ class DefaultTableIterator implements ITableIterator
      *
      * @return string
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function key()
     {
         return $this->current()->getTableMetaData()->getTableName();
@@ -92,30 +97,30 @@ class DefaultTableIterator implements ITableIterator
     public function next(): void
     {
         if ($this->reverse) {
-            \prev($this->tables);
+            prev($this->tables);
         } else {
-            \next($this->tables);
+            next($this->tables);
         }
     }
 
     /**
-     * Rewinds to the first element
+     * Rewinds to the first element.
      */
     public function rewind(): void
     {
         if ($this->reverse) {
-            \end($this->tables);
+            end($this->tables);
         } else {
-            \reset($this->tables);
+            reset($this->tables);
         }
     }
 
     /**
-     * Returns true if the current index is valid
+     * Returns true if the current index is valid.
      *
      * @return bool
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function valid()
     {
         return $this->current() !== false;

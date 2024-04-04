@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,9 +7,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\DataSet;
 
+use function count;
+use function in_array;
 use PHPUnit\DbUnit\RuntimeException;
 
 /**
@@ -44,10 +45,10 @@ class XmlDataSet extends AbstractXmlDataSet
                 $columnName = (string) $columnElement;
 
                 if (empty($columnName)) {
-                    throw new RuntimeException("Missing <column> elements for table $tableName. Add one or more <column> elements to the <table> element.");
+                    throw new RuntimeException("Missing <column> elements for table {$tableName}. Add one or more <column> elements to the <table> element.");
                 }
 
-                if (!\in_array($columnName, $tableColumns[$tableName])) {
+                if (!in_array($columnName, $tableColumns[$tableName], true)) {
                     $tableColumns[$tableName][] = $columnName;
                 }
 
@@ -57,11 +58,11 @@ class XmlDataSet extends AbstractXmlDataSet
             foreach ($tableElement->xpath('./row') as $rowElement) {
                 $rowValues                 = [];
                 $index                     = 0;
-                $numOfTableInstanceColumns = \count($tableInstanceColumns);
+                $numOfTableInstanceColumns = count($tableInstanceColumns);
 
                 foreach ($rowElement->children() as $columnValue) {
                     if ($index >= $numOfTableInstanceColumns) {
-                        throw new RuntimeException("Row contains more values than the number of columns defined for table $tableName.");
+                        throw new RuntimeException("Row contains more values than the number of columns defined for table {$tableName}.");
                     }
 
                     switch ($columnValue->getName()) {
@@ -70,11 +71,13 @@ class XmlDataSet extends AbstractXmlDataSet
                             $index++;
 
                             break;
+
                         case 'null':
                             $rowValues[$tableInstanceColumns[$index]] = null;
                             $index++;
 
                             break;
+
                         default:
                             throw new RuntimeException('Unknown element ' . $columnValue->getName() . ' in a row element.');
                     }

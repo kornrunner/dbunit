@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit;
 
 use PHPUnit\DbUnit\Database\Connection;
@@ -51,8 +50,6 @@ abstract class AbstractTester implements Tester
 
     /**
      * Closes the specified connection.
-     *
-     * @param Connection $connection
      */
     public function closeConnection(Connection $connection): void
     {
@@ -87,8 +84,6 @@ abstract class AbstractTester implements Tester
 
     /**
      * Sets the test dataset to use.
-     *
-     * @param IDataSet $dataSet
      */
     public function setDataSet(IDataSet $dataSet): void
     {
@@ -107,8 +102,6 @@ abstract class AbstractTester implements Tester
 
     /**
      * Sets the DatabaseOperation to call when starting the test.
-     *
-     * @param Operation $setUpOperation
      */
     public function setSetUpOperation(Operation $setUpOperation): void
     {
@@ -117,8 +110,6 @@ abstract class AbstractTester implements Tester
 
     /**
      * Sets the DatabaseOperation to call when ending the test.
-     *
-     * @param Operation $tearDownOperation
      */
     public function setTearDownOperation(Operation $tearDownOperation): void
     {
@@ -126,7 +117,7 @@ abstract class AbstractTester implements Tester
     }
 
     /**
-     * Returns the schema value
+     * Returns the schema value.
      *
      * @return string
      */

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,8 +7,20 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\DataSet;
+
+use function array_key_exists;
+use function array_keys;
+use function array_map;
+use function array_values;
+use function count;
+use function is_numeric;
+use function is_scalar;
+use function str_pad;
+use function str_repeat;
+use function str_replace;
+use function strlen;
+use function substr;
 
 /**
  * Allows for replacing arbitrary strings in your data sets with other values.
@@ -33,11 +45,7 @@ class ReplacementTable implements ITable
     protected $subStrReplacements;
 
     /**
-     * Creates a new replacement table
-     *
-     * @param ITable $table
-     * @param array  $fullReplacements
-     * @param array  $subStrReplacements
+     * Creates a new replacement table.
      */
     public function __construct(ITable $table, array $fullReplacements = [], array $subStrReplacements = [])
     {
@@ -50,11 +58,11 @@ class ReplacementTable implements ITable
     {
         $columns = $this->getTableMetaData()->getColumns();
 
-        $lineSeperator = \str_repeat('+----------------------', \count($columns)) . "+\n";
-        $lineLength    = \strlen($lineSeperator) - 1;
+        $lineSeperator = str_repeat('+----------------------', count($columns)) . "+\n";
+        $lineLength    = strlen($lineSeperator) - 1;
 
         $tableString = $lineSeperator;
-        $tableString .= '| ' . \str_pad($this->getTableMetaData()->getTableName(), $lineLength - 4, ' ', STR_PAD_RIGHT) . " |\n";
+        $tableString .= '| ' . str_pad($this->getTableMetaData()->getTableName(), $lineLength - 4, ' ', STR_PAD_RIGHT) . " |\n";
         $tableString .= $lineSeperator;
         $tableString .= $this->rowToString($columns);
         $tableString .= $lineSeperator;
@@ -76,7 +84,7 @@ class ReplacementTable implements ITable
     }
 
     /**
-     * Adds a new full replacement
+     * Adds a new full replacement.
      *
      * Full replacements will only replace values if the FULL value is a match
      *
@@ -89,7 +97,7 @@ class ReplacementTable implements ITable
     }
 
     /**
-     * Adds a new substr replacement
+     * Adds a new substr replacement.
      *
      * Substr replacements will replace all occurances of the substr in every column
      *
@@ -143,13 +151,11 @@ class ReplacementTable implements ITable
     {
         $row = $this->table->getRow($row);
 
-        return \array_map([$this, 'getReplacedValue'], $row);
+        return array_map([$this, 'getReplacedValue'], $row);
     }
 
     /**
      * Asserts that the given table matches this table.
-     *
-     * @param ITable $other
      */
     public function matches(ITable $other)
     {
@@ -170,7 +176,7 @@ class ReplacementTable implements ITable
                 $thisValue  = $this->getValue($i, $columnName);
                 $otherValue = $other->getValue($i, $columnName);
 
-                if (\is_numeric($thisValue) && \is_numeric($otherValue)) {
+                if (is_numeric($thisValue) && is_numeric($otherValue)) {
                     if ($thisValue != $otherValue) {
                         return false;
                     }
@@ -188,11 +194,11 @@ class ReplacementTable implements ITable
         $rowString = '';
 
         foreach ($row as $value) {
-            if (\is_null($value)) {
+            if (null === $value) {
                 $value = 'NULL';
             }
 
-            $rowString .= '| ' . \str_pad(\substr($value, 0, 20), 20, ' ', STR_PAD_BOTH) . ' ';
+            $rowString .= '| ' . str_pad(substr($value, 0, 20), 20, ' ', STR_PAD_BOTH) . ' ';
         }
 
         return $rowString . "|\n";
@@ -200,12 +206,12 @@ class ReplacementTable implements ITable
 
     protected function getReplacedValue($value)
     {
-        if (\is_scalar($value) && \array_key_exists((string) $value, $this->fullReplacements)) {
+        if (is_scalar($value) && array_key_exists((string) $value, $this->fullReplacements)) {
             return $this->fullReplacements[$value];
         }
 
-        if (\count($this->subStrReplacements) && isset($value)) {
-            return \str_replace(\array_keys($this->subStrReplacements), \array_values($this->subStrReplacements), $value);
+        if (count($this->subStrReplacements) && isset($value)) {
+            return str_replace(array_keys($this->subStrReplacements), array_values($this->subStrReplacements), is_scalar($value) ? (string) $value : $value);
         }
 
         return $value;

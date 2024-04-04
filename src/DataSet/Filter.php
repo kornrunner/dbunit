@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,8 +7,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\DataSet;
+
+use function array_merge;
+use function array_unique;
+use function in_array;
+use function is_array;
 
 /**
  * A dataset decorator that allows filtering out tables and table columns from
@@ -59,8 +63,7 @@ class Filter extends AbstractDataSet
      * would like to exclude a full table set the value of the table's entry
      * to the special string '*'.
      *
-     * @param IDataSet $originalDataSet
-     * @param array    $excludeTables   @deprecated use set* methods instead
+     * @param array $excludeTables @deprecated use set* methods instead
      */
     public function __construct(IDataSet $originalDataSet, array $excludeTables = [])
     {
@@ -69,7 +72,7 @@ class Filter extends AbstractDataSet
         $tables = [];
 
         foreach ($excludeTables as $tableName => $values) {
-            if (\is_array($values)) {
+            if (is_array($values)) {
                 $this->setExcludeColumnsForTable($tableName, $values);
             } elseif ($values == '*') {
                 $tables[] = $tableName;
@@ -83,29 +86,24 @@ class Filter extends AbstractDataSet
 
     /**
      * Adds tables to be included in the data set.
-     *
-     * @param array $tables
      */
     public function addIncludeTables(array $tables): void
     {
-        $this->includeTables = \array_unique(\array_merge($this->includeTables, $tables));
+        $this->includeTables = array_unique(array_merge($this->includeTables, $tables));
     }
 
     /**
      * Adds tables to be included in the data set.
-     *
-     * @param array $tables
      */
     public function addExcludeTables(array $tables): void
     {
-        $this->excludeTables = \array_unique(\array_merge($this->excludeTables, $tables));
+        $this->excludeTables = array_unique(array_merge($this->excludeTables, $tables));
     }
 
     /**
      * Adds columns to include in the data set for the given table.
      *
      * @param string $table
-     * @param array  $columns
      */
     public function setIncludeColumnsForTable($table, array $columns): void
     {
@@ -116,7 +114,6 @@ class Filter extends AbstractDataSet
      * Adds columns to include in the data set for the given table.
      *
      * @param string $table
-     * @param array  $columns
      */
     public function setExcludeColumnsForTable($table, array $columns): void
     {
@@ -140,8 +137,8 @@ class Filter extends AbstractDataSet
             /* @var $table ITable */
             $tableName = $table->getTableMetaData()->getTableName();
 
-            if ((!\in_array($tableName, $this->includeTables) && !empty($this->includeTables)) ||
-                \in_array($tableName, $this->excludeTables)
+            if ((!in_array($tableName, $this->includeTables, true) && !empty($this->includeTables)) ||
+                in_array($tableName, $this->excludeTables, true)
             ) {
                 continue;
             }

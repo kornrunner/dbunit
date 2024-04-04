@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\Operation;
 
 use PHPUnit\DbUnit\Database\Connection;
@@ -25,17 +24,11 @@ use PHPUnit\DbUnit\DataSet\ITableMetadata;
  */
 abstract class RowBased implements Operation
 {
-    const ITERATOR_TYPE_FORWARD = 0;
-    const ITERATOR_TYPE_REVERSE = 1;
-
+    public const ITERATOR_TYPE_FORWARD = 0;
+    public const ITERATOR_TYPE_REVERSE = 1;
     protected $operationName;
-
     protected $iteratorDirection = self::ITERATOR_TYPE_FORWARD;
 
-    /**
-     * @param Connection $connection
-     * @param IDataSet   $dataSet
-     */
     public function execute(Connection $connection, IDataSet $dataSet): void
     {
         $databaseDataSet = $connection->createDataSet();
@@ -79,7 +72,7 @@ abstract class RowBased implements Operation
                         $query,
                         $args,
                         $table,
-                        $e->getMessage()
+                        $e->getMessage(),
                     );
                 }
             }
@@ -99,10 +92,6 @@ abstract class RowBased implements Operation
 
     /**
      * Allows an operation to disable primary keys if necessary.
-     *
-     * @param ITableMetadata $databaseTableMetaData
-     * @param ITable         $table
-     * @param Connection     $connection
      */
     protected function disablePrimaryKeys(ITableMetadata $databaseTableMetaData, ITable $table, Connection $connection)
     {

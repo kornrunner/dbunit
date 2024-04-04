@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,9 +7,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\DataSet;
 
+use const PHP_VERSION_ID;
+use function is_file;
+use function libxml_clear_errors;
+use function libxml_disable_entity_loader;
+use function libxml_get_errors;
+use function libxml_use_internal_errors;
+use function print_r;
+use function simplexml_load_file;
 use PHPUnit\DbUnit\InvalidArgumentException;
 use RuntimeException;
 use SimpleXmlElement;
@@ -32,37 +39,37 @@ abstract class AbstractXmlDataSet extends AbstractDataSet
     /**
      * Creates a new dataset using the given tables.
      *
-     * @param array $tables
      * @param mixed $xmlFile
      */
     public function __construct($xmlFile)
     {
-        if (!\is_file($xmlFile)) {
+        if (!is_file($xmlFile)) {
             throw new InvalidArgumentException(
-                "Could not find xml file: {$xmlFile}"
+                "Could not find xml file: {$xmlFile}",
             );
         }
 
-        if (\PHP_VERSION_ID < 80000) {
-            $libxmlEntityLoader = \libxml_disable_entity_loader(false);
+        if (PHP_VERSION_ID < 80000) {
+            $libxmlEntityLoader = libxml_disable_entity_loader(false);
         }
-        $libxmlErrorReporting  = \libxml_use_internal_errors(true);
-        $this->xmlFileContents = \simplexml_load_file($xmlFile, 'SimpleXMLElement', LIBXML_COMPACT | LIBXML_PARSEHUGE);
+        $libxmlErrorReporting  = libxml_use_internal_errors(true);
+        $this->xmlFileContents = simplexml_load_file($xmlFile, 'SimpleXMLElement', LIBXML_COMPACT | LIBXML_PARSEHUGE);
 
         if (!$this->xmlFileContents) {
             $message = '';
 
-            foreach (\libxml_get_errors() as $error) {
-                $message .= \print_r($error, true);
+            foreach (libxml_get_errors() as $error) {
+                $message .= print_r($error, true);
             }
 
             throw new RuntimeException($message);
         }
 
-        \libxml_clear_errors();
-        \libxml_use_internal_errors($libxmlErrorReporting);
-        if (\PHP_VERSION_ID < 80000) {
-            \libxml_disable_entity_loader($libxmlEntityLoader);
+        libxml_clear_errors();
+        libxml_use_internal_errors($libxmlErrorReporting);
+
+        if (PHP_VERSION_ID < 80000) {
+            libxml_disable_entity_loader($libxmlEntityLoader);
         }
 
         $tableColumns = [];

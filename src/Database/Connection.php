@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\Database;
 
 use PDO;
@@ -30,11 +29,9 @@ interface Connection
      * names are specified then it will created a dataset over the entire
      * database.
      *
-     * @param array $tableNames
-     *
      * @return IDataSet
      */
-    public function createDataSet(array $tableNames = null);
+    public function createDataSet(?array $tableNames = null);
 
     /**
      * Creates a table with the result of the specified SQL statement.
@@ -47,7 +44,7 @@ interface Connection
     public function createQueryTable($resultName, $sql);
 
     /**
-     * Returns a PDO Connection
+     * Returns a PDO Connection.
      *
      * @return PDO
      */
@@ -79,7 +76,7 @@ interface Connection
     public function getSchema();
 
     /**
-     * Returns a quoted schema object. (table name, column name, etc)
+     * Returns a quoted schema object. (table name, column name, etc).
      *
      * @param string $object
      *
@@ -95,21 +92,21 @@ interface Connection
     public function getTruncateCommand();
 
     /**
-     * Returns true if the connection allows cascading
+     * Returns true if the connection allows cascading.
      *
      * @return bool
      */
     public function allowsCascading();
 
     /**
-     * Disables primary keys if connection does not allow setting them otherwise
+     * Disables primary keys if connection does not allow setting them otherwise.
      *
      * @param string $tableName
      */
     public function disablePrimaryKeys($tableName);
 
     /**
-     * Reenables primary keys after they have been disabled
+     * Reenables primary keys after they have been disabled.
      *
      * @param string $tableName
      */

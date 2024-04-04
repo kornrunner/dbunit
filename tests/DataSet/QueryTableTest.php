@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,13 +7,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 use PHPUnit\DbUnit\Database\DefaultConnection;
 use PHPUnit\DbUnit\DataSet\DefaultTable;
 use PHPUnit\DbUnit\DataSet\DefaultTableMetadata;
 use PHPUnit\DbUnit\DataSet\QueryTable;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 
 class Extensions_Database_DataSet_QueryTableTest extends TestCase
 {
@@ -34,7 +33,7 @@ class Extensions_Database_DataSet_QueryTableTest extends TestCase
         ];
     }
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $query = "
             SELECT
@@ -49,7 +48,7 @@ class Extensions_Database_DataSet_QueryTableTest extends TestCase
         $this->table = new QueryTable(
             'table1',
             $query,
-            new DefaultConnection(new PDO('sqlite::memory:'), 'test')
+            new DefaultConnection(new PDO('sqlite::memory:'), 'test'),
         );
     }
 
@@ -59,13 +58,13 @@ class Extensions_Database_DataSet_QueryTableTest extends TestCase
 
         $conn = new PDO('sqlite::memory:');
         $conn->exec(
-          'CREATE TABLE IF NOT EXISTS table1 (
+            'CREATE TABLE IF NOT EXISTS table1 (
             table1_id INTEGER PRIMARY KEY AUTOINCREMENT,
             column1 VARCHAR(20),
             column2 INT(10),
             column3 DECIMAL(6,2),
             column4 TEXT
-          )'
+          )',
         );
 
         $query = '
@@ -76,7 +75,7 @@ class Extensions_Database_DataSet_QueryTableTest extends TestCase
         $empty_table = new QueryTable(
             'table1',
             $query,
-            new DefaultConnection($conn)
+            new DefaultConnection($conn),
         );
 
         $this->assertEquals($metaData, $empty_table->getTableMetaData());
@@ -130,7 +129,7 @@ class Extensions_Database_DataSet_QueryTableTest extends TestCase
     public function testAssertRowContains(): void
     {
         $this->assertTrue($this->table->assertContainsRow(
-            ['col1' => 'value1', 'col2' => 'value2', 'col3' => 'value3']
+            ['col1' => 'value1', 'col2' => 'value2', 'col3' => 'value3'],
         ));
     }
 }

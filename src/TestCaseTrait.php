@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit;
 
 use PDO;
@@ -35,8 +34,6 @@ trait TestCaseTrait
     /**
      * Asserts that two given tables are equal.
      *
-     * @param ITable $expected
-     * @param ITable $actual
      * @param string $message
      */
     public static function assertTablesEqual(ITable $expected, ITable $actual, $message = ''): void
@@ -93,7 +90,7 @@ trait TestCaseTrait
     }
 
     /**
-     * Assert that a given table has a given amount of rows
+     * Assert that a given table has a given amount of rows.
      *
      * @param string $tableName Name of the table
      * @param int    $expected  Expected amount of rows in the table
@@ -108,7 +105,7 @@ trait TestCaseTrait
     }
 
     /**
-     * Asserts that a given table contains a given row
+     * Asserts that a given table contains a given row.
      *
      * @param array  $expectedRow Row expected to find
      * @param ITable $table       Table to look into
@@ -121,8 +118,6 @@ trait TestCaseTrait
 
     /**
      * Closes the specified connection.
-     *
-     * @param Connection $connection
      */
     protected function closeConnection(Connection $connection): void
     {
@@ -193,7 +188,6 @@ trait TestCaseTrait
      * Creates a new DefaultDatabaseConnection using the given PDO connection
      * and database schema name.
      *
-     * @param PDO    $connection
      * @param string $schema
      *
      * @return DefaultConnection
@@ -215,9 +209,7 @@ trait TestCaseTrait
      *         array("id" => 1, "name" => "...", "address" => "..."),
      *         array("id" => 2, "name" => "...", "address" => "...")
      *     )
-     * )
-     *
-     * @param array $data
+     * ).
      *
      * @return ArrayDataSet
      */
@@ -227,7 +219,7 @@ trait TestCaseTrait
     }
 
     /**
-     * Creates a new FlatXmlDataSet with the given $xmlFile. (absolute path.)
+     * Creates a new FlatXmlDataSet with the given $xmlFile. (absolute path.).
      *
      * @param string $xmlFile
      *
@@ -239,7 +231,7 @@ trait TestCaseTrait
     }
 
     /**
-     * Creates a new XMLDataSet with the given $xmlFile. (absolute path.)
+     * Creates a new XMLDataSet with the given $xmlFile. (absolute path.).
      *
      * @param string $xmlFile
      *
@@ -251,7 +243,7 @@ trait TestCaseTrait
     }
 
     /**
-     * Create a a new MysqlXmlDataSet with the given $xmlFile. (absolute path.)
+     * Create a a new MysqlXmlDataSet with the given $xmlFile. (absolute path.).
      *
      * @param string $xmlFile
      *
@@ -270,6 +262,6 @@ trait TestCaseTrait
      */
     protected function getOperations()
     {
-        return new Factory();
+        return new Factory;
     }
 }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,9 +7,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\DataSet;
 
+use function in_array;
+use function pack;
+use function sprintf;
 use PHPUnit\DbUnit\RuntimeException;
 
 /**
@@ -48,7 +50,7 @@ class MysqlXmlDataSet extends AbstractXmlDataSet
 
                     $columnName = (string) $columnElement['name'];
 
-                    if (!\in_array($columnName, $tableColumns[$tableName])) {
+                    if (!in_array($columnName, $tableColumns[$tableName], true)) {
                         $tableColumns[$tableName][] = $columnName;
                     }
                 }
@@ -58,11 +60,11 @@ class MysqlXmlDataSet extends AbstractXmlDataSet
 
                     if (!isset($fields[0])) {
                         throw new RuntimeException(
-                            \sprintf(
+                            sprintf(
                                 '%s column doesn\'t exist in current row for table %s',
                                 $columnName,
-                                $tableName
-                            )
+                                $tableName,
+                            ),
                         );
                     }
 
@@ -70,7 +72,7 @@ class MysqlXmlDataSet extends AbstractXmlDataSet
                     $attr   = $column->attributes('http://www.w3.org/2001/XMLSchema-instance');
 
                     if (isset($attr['type']) && (string) $attr['type'] === 'xs:hexBinary') {
-                        $columnValue = \pack('H*', (string) $column);
+                        $columnValue = pack('H*', (string) $column);
                     } else {
                         $null        = isset($column['nil']) || isset($attr[0]);
                         $columnValue = $null ? null : (string) $column;
@@ -97,7 +99,7 @@ class MysqlXmlDataSet extends AbstractXmlDataSet
 
                 $columnName = (string) (empty($fieldElement['Field']) ? $fieldElement['field'] : $fieldElement['Field']);
 
-                if (!\in_array($columnName, $tableColumns[$tableName])) {
+                if (!in_array($columnName, $tableColumns[$tableName], true)) {
                     $tableColumns[$tableName][] = $columnName;
                 }
             }

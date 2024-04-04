@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,9 +7,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\Operation;
 
+use function count;
+use function implode;
 use PHPUnit\DbUnit\Database\Connection;
 use PHPUnit\DbUnit\DataSet\ITable;
 use PHPUnit\DbUnit\DataSet\ITableMetadata;
@@ -25,16 +26,14 @@ class Update extends RowBased
     {
         $keys           = $databaseTableMetaData->getPrimaryKeys();
         $columns        = $table->getTableMetaData()->getColumns();
-        $whereStatement = 'WHERE ' . \implode(' AND ', $this->buildPreparedColumnArray($keys, $connection));
-        $setStatement   = 'SET ' . \implode(', ', $this->buildPreparedColumnArray($columns, $connection));
+        $whereStatement = 'WHERE ' . implode(' AND ', $this->buildPreparedColumnArray($keys, $connection));
+        $setStatement   = 'SET ' . implode(', ', $this->buildPreparedColumnArray($columns, $connection));
 
-        $query = "
+        return "
             UPDATE {$connection->quoteSchemaObject($table->getTableMetaData()->getTableName())}
             {$setStatement}
             {$whereStatement}
         ";
-
-        return $query;
     }
 
     protected function buildOperationArguments(ITableMetadata $databaseTableMetaData, ITable $table, $row)
@@ -54,7 +53,7 @@ class Update extends RowBased
 
     protected function disablePrimaryKeys(ITableMetadata $databaseTableMetaData, ITable $table, Connection $connection)
     {
-        if (\count($databaseTableMetaData->getPrimaryKeys())) {
+        if (count($databaseTableMetaData->getPrimaryKeys())) {
             return true;
         }
 

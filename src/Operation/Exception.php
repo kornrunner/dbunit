@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,9 +7,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\Operation;
 
+use function print_r;
 use PHPUnit\DbUnit\DataSet\ITable;
 use PHPUnit\DbUnit\RuntimeException;
 
@@ -46,17 +46,17 @@ class Exception extends RuntimeException
     protected $error;
 
     /**
-     * Creates a new dbunit operation exception
+     * Creates a new dbunit operation exception.
      *
      * @param string $operation
      * @param string $current_query
+     * @param mixed  $current_args
      * @param ITable $current_table
      * @param string $error
-     * @param mixed  $current_args
      */
     public function __construct($operation, $current_query, $current_args, $current_table, $error)
     {
-        parent::__construct("{$operation} operation failed on query: {$current_query} using args: " . \print_r($current_args, true) . " [{$error}]");
+        parent::__construct("{$operation} operation failed on query: {$current_query} using args: " . print_r($current_args, true) . " [{$error}]");
 
         $this->operation     = $operation;
         $this->preparedQuery = $current_query;

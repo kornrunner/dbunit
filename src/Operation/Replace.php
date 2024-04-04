@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,9 +7,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\Operation;
 
+use function implode;
 use PHPUnit\DbUnit\Database\Connection;
 use PHPUnit\DbUnit\DataSet\IDataSet;
 use PHPUnit\DbUnit\DataSet\ITable;
@@ -22,10 +22,6 @@ class Replace extends RowBased
 {
     protected $operationName = 'REPLACE';
 
-    /**
-     * @param Connection $connection
-     * @param IDataSet   $dataSet
-     */
     public function execute(Connection $connection, IDataSet $dataSet): void
     {
         $insertOperation = new Insert;
@@ -73,7 +69,7 @@ class Replace extends RowBased
                         $query,
                         $args,
                         $table,
-                        $e->getMessage()
+                        $e->getMessage(),
                     );
                 }
             }
@@ -84,15 +80,13 @@ class Replace extends RowBased
     {
         $keys = $databaseTableMetaData->getPrimaryKeys();
 
-        $whereStatement = 'WHERE ' . \implode(' AND ', $this->buildPreparedColumnArray($keys, $connection));
+        $whereStatement = 'WHERE ' . implode(' AND ', $this->buildPreparedColumnArray($keys, $connection));
 
-        $query = "
+        return "
             SELECT COUNT(*)
             FROM {$connection->quoteSchemaObject($table->getTableMetaData()->getTableName())}
             {$whereStatement}
         ";
-
-        return $query;
     }
 
     protected function buildOperationArguments(ITableMetadata $databaseTableMetaData, ITable $table, $row)

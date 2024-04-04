@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\Database;
 
 use PDO;
@@ -34,10 +33,9 @@ class DefaultConnection implements Connection
     protected $metaData;
 
     /**
-     * Creates a new database connection
+     * Creates a new database connection.
      *
-     * @param PDO    $connection
-     * @param string $schema     - The name of the database schema you will be testing against
+     * @param string $schema - The name of the database schema you will be testing against
      */
     public function __construct(PDO $connection, $schema = '')
     {
@@ -51,7 +49,8 @@ class DefaultConnection implements Connection
      */
     public function close(): void
     {
-        unset($this->connection, $this->metaData);
+        $this->connection = null;
+        $this->metaData   = null;
     }
 
     /**
@@ -80,13 +79,11 @@ class DefaultConnection implements Connection
      * names are specified then it will created a dataset over the entire
      * database.
      *
-     * @param array $tableNames
-     *
      * @return IDataSet
      *
      * @todo Implement the filtered data set.
      */
-    public function createDataSet(array $tableNames = null)
+    public function createDataSet(?array $tableNames = null)
     {
         if (empty($tableNames)) {
             return new DataSet($this);
@@ -109,14 +106,14 @@ class DefaultConnection implements Connection
     }
 
     /**
-     * Returns this connection database configuration
+     * Returns this connection database configuration.
      */
     public function getConfig(): void
     {
     }
 
     /**
-     * Returns a PDO Connection
+     * Returns a PDO Connection.
      *
      * @return PDO
      */
@@ -146,7 +143,7 @@ class DefaultConnection implements Connection
     }
 
     /**
-     * Returns a quoted schema object. (table name, column name, etc)
+     * Returns a quoted schema object. (table name, column name, etc).
      *
      * @param string $object
      *
@@ -168,7 +165,7 @@ class DefaultConnection implements Connection
     }
 
     /**
-     * Returns true if the connection allows cascading
+     * Returns true if the connection allows cascading.
      *
      * @return bool
      */
@@ -178,7 +175,7 @@ class DefaultConnection implements Connection
     }
 
     /**
-     * Disables primary keys if connection does not allow setting them otherwise
+     * Disables primary keys if connection does not allow setting them otherwise.
      *
      * @param string $tableName
      */
@@ -188,7 +185,7 @@ class DefaultConnection implements Connection
     }
 
     /**
-     * Reenables primary keys after they have been disabled
+     * Reenables primary keys after they have been disabled.
      *
      * @param string $tableName
      */

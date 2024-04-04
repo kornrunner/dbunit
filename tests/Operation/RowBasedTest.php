@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 use PHPUnit\DbUnit\Database\Connection;
 use PHPUnit\DbUnit\Database\DefaultConnection;
 use PHPUnit\DbUnit\DataSet\DefaultDataSet;
@@ -25,6 +24,11 @@ require_once \dirname(__DIR__) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPA
 
 class Extensions_Database_Operation_RowBasedTest extends TestCase
 {
+    public static function at(int $index): InvokedAtIndex
+    {
+        return new InvokedAtIndex($index);
+    }
+
     protected function setUp(): void
     {
         if (!\extension_loaded('pdo_sqlite')) {
@@ -45,20 +49,20 @@ class Extensions_Database_Operation_RowBasedTest extends TestCase
             new DefaultTable(
                 new DefaultTableMetadata(
                     'table1',
-                    ['table1_id', 'column1', 'column2', 'column3', 'column4']
-                )
+                    ['table1_id', 'column1', 'column2', 'column3', 'column4'],
+                ),
             ),
             new DefaultTable(
                 new DefaultTableMetadata(
                     'table2',
-                    ['table2_id', 'column5', 'column6', 'column7', 'column8']
-                )
+                    ['table2_id', 'column5', 'column6', 'column7', 'column8'],
+                ),
             ),
             new DefaultTable(
                 new DefaultTableMetadata(
                     'table3',
-                    ['table3_id', 'column9', 'column10', 'column11', 'column12']
-                )
+                    ['table3_id', 'column9', 'column10', 'column11', 'column12'],
+                ),
             ),
         ];
 
@@ -70,7 +74,7 @@ class Extensions_Database_Operation_RowBasedTest extends TestCase
         $connection = $this->getConnection();
         /* @var $connection DefaultConnection */
         $table1 = new DefaultTable(
-            new DefaultTableMetadata('table1', ['table1_id', 'column1', 'column2', 'column3', 'column4'])
+            new DefaultTableMetadata('table1', ['table1_id', 'column1', 'column2', 'column3', 'column4']),
         );
 
         $table1->addRow([
@@ -78,7 +82,7 @@ class Extensions_Database_Operation_RowBasedTest extends TestCase
             'column1'   => 'foo',
             'column2'   => 42,
             'column3'   => 4.2,
-            'column4'   => 'bar'
+            'column4'   => 'bar',
         ]);
 
         $table1->addRow([
@@ -86,11 +90,11 @@ class Extensions_Database_Operation_RowBasedTest extends TestCase
             'column1'   => 'qwerty',
             'column2'   => 23,
             'column3'   => 2.3,
-            'column4'   => 'dvorak'
+            'column4'   => 'dvorak',
         ]);
 
         $table2 = new DefaultTable(
-            new DefaultTableMetadata('table2', ['table2_id', 'column5', 'column6', 'column7', 'column8'])
+            new DefaultTableMetadata('table2', ['table2_id', 'column5', 'column6', 'column7', 'column8']),
         );
 
         $table2->addRow([
@@ -98,41 +102,41 @@ class Extensions_Database_Operation_RowBasedTest extends TestCase
             'column5'   => 'fdyhkn',
             'column6'   => 64,
             'column7'   => 4568.64,
-            'column8'   => 'hkladfg'
+            'column8'   => 'hkladfg',
         ]);
 
         $dataSet = new DefaultDataSet([$table1, $table2]);
 
         $mockOperation = $this->createPartialMock(
             RowBased::class,
-                ['buildOperationQuery', 'buildOperationArguments']
+            ['buildOperationQuery', 'buildOperationArguments'],
         );
 
         /* @var $mockOperation PHPUnit_Framework_MockObject_MockObject */
         $mockOperation->expects($this->at(0))
-                ->method('buildOperationQuery')
-                ->with($connection->createDataSet()->getTableMetaData('table1'), $table1)
-                ->willReturn('INSERT INTO table1 (table1_id, column1, column2, column3, column4) VALUES (?, ?, ?, ?, ?)');
+            ->method('buildOperationQuery')
+            ->with($connection->createDataSet()->getTableMetaData('table1'), $table1)
+            ->willReturn('INSERT INTO table1 (table1_id, column1, column2, column3, column4) VALUES (?, ?, ?, ?, ?)');
 
         $mockOperation->expects($this->at(1))
-                ->method('buildOperationArguments')
-                ->with($connection->createDataSet()->getTableMetaData('table1'), $table1, 0)
-                ->willReturn([1, 'foo', 42, 4.2, 'bar']);
+            ->method('buildOperationArguments')
+            ->with($connection->createDataSet()->getTableMetaData('table1'), $table1, 0)
+            ->willReturn([1, 'foo', 42, 4.2, 'bar']);
 
         $mockOperation->expects($this->at(2))
-                ->method('buildOperationArguments')
-                ->with($connection->createDataSet()->getTableMetaData('table1'), $table1, 1)
-                ->willReturn([2, 'qwerty', 23, 2.3, 'dvorak']);
+            ->method('buildOperationArguments')
+            ->with($connection->createDataSet()->getTableMetaData('table1'), $table1, 1)
+            ->willReturn([2, 'qwerty', 23, 2.3, 'dvorak']);
 
         $mockOperation->expects($this->at(3))
-                ->method('buildOperationQuery')
-                ->with($connection->createDataSet()->getTableMetaData('table2'), $table2)
-                ->willReturn('INSERT INTO table2 (table2_id, column5, column6, column7, column8) VALUES (?, ?, ?, ?, ?)');
+            ->method('buildOperationQuery')
+            ->with($connection->createDataSet()->getTableMetaData('table2'), $table2)
+            ->willReturn('INSERT INTO table2 (table2_id, column5, column6, column7, column8) VALUES (?, ?, ?, ?, ?)');
 
         $mockOperation->expects($this->at(4))
-                ->method('buildOperationArguments')
-                ->with($connection->createDataSet()->getTableMetaData('table2'), $table2, 0)
-                ->willReturn([1, 'fdyhkn', 64, 4568.64, 'hkladfg']);
+            ->method('buildOperationArguments')
+            ->with($connection->createDataSet()->getTableMetaData('table2'), $table2, 0)
+            ->willReturn([1, 'fdyhkn', 64, 4568.64, 'hkladfg']);
 
         /* @var $mockOperation RowBased */
         $mockOperation->execute($connection, $dataSet);
@@ -163,7 +167,7 @@ class Extensions_Database_Operation_RowBasedTest extends TestCase
 
         $mockOperation = $this->createPartialMock(
             RowBased::class,
-            ['buildOperationQuery', 'buildOperationArguments']
+            ['buildOperationQuery', 'buildOperationArguments'],
         );
         $mockOperation->expects($this->never())->method('buildOperationArguments');
         $mockOperation->expects($this->never())->method('buildOperationQuery');
@@ -186,7 +190,7 @@ class Extensions_Database_Operation_RowBasedTest extends TestCase
         $mockDatabaseDataSet->expects($this->once())->method('getTableMetaData')->willReturn($mockTableMetaData);
 
         $mockPdoStatement = $this->createMock(PDOStatement::class);
-        $mockPdoStatement->expects($this->once())->method('execute')->will($this->throwException(new Exception()));
+        $mockPdoStatement->expects($this->once())->method('execute')->will($this->throwException(new Exception));
         $mockPdoConnection = $this->createMock(PDO::class);
         $mockPdoConnection->expects($this->once())->method('prepare')->willReturn($mockPdoStatement);
 
@@ -201,16 +205,11 @@ class Extensions_Database_Operation_RowBasedTest extends TestCase
 
         $mockOperation = $this->createPartialMock(
             RowBased::class,
-            ['buildOperationQuery', 'buildOperationArguments']
+            ['buildOperationQuery', 'buildOperationArguments'],
         );
         $mockOperation->expects($this->once())->method('buildOperationQuery')->willReturn('');
         $mockOperation->expects($this->exactly($rowCount))->method('buildOperationArguments')->willReturn([]);
 
         $mockOperation->execute($mockConnection, $mockDataSet);
-    }
-
-    public static function at(int $index): InvokedAtIndex
-    {
-        return new InvokedAtIndex($index);
     }
 }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of DbUnit.
  *
@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\DbUnit\DataSet;
 
 /**
@@ -24,8 +23,6 @@ class DefaultDataSet extends AbstractDataSet
 
     /**
      * Creates a new dataset using the given tables.
-     *
-     * @param array $tables
      */
     public function __construct(array $tables = [])
     {
@@ -34,8 +31,6 @@ class DefaultDataSet extends AbstractDataSet
 
     /**
      * Adds a table to the dataset.
-     *
-     * @param ITable $table
      */
     public function addTable(ITable $table): void
     {
