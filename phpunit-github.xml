@@ -8,9 +8,9 @@
   </testsuite>
   <php>
     <const name="PHPUNIT_TESTSUITE" value="true"/>
-    <!-- <const name="PHPUNIT_TESTSUITE_EXTENSION_DATABASE_MYSQL_DSN" value="mysql:host=127.0.0.1;dbname=dbunit;port=3306"/> -->
-    <!-- <const name="PHPUNIT_TESTSUITE_EXTENSION_DATABASE_MYSQL_USERNAME" value="root"/> -->
-    <!-- <const name="PHPUNIT_TESTSUITE_EXTENSION_DATABASE_MYSQL_PASSWORD" value="root"/> -->
+    <const name="PHPUNIT_TESTSUITE_EXTENSION_DATABASE_MYSQL_DSN" value="mysql:host=127.0.0.1;dbname=dbunit;port=3306"/>
+    <const name="PHPUNIT_TESTSUITE_EXTENSION_DATABASE_MYSQL_USERNAME" value="root"/>
+    <const name="PHPUNIT_TESTSUITE_EXTENSION_DATABASE_MYSQL_PASSWORD" value="root"/>
   </php>
   <source>
     <include>
