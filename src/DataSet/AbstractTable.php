@@ -226,7 +226,7 @@ class AbstractTable implements ITable
                 $value = 'NULL';
             }
 
-            $value_str = mb_substr($value, 0, 20);
+            $value_str = mb_substr((string) $value, 0, 20);
 
             // make str_pad act in multibyte manner
             $correction = strlen($value_str) - mb_strlen($value_str);
