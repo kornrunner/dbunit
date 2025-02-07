@@ -38,5 +38,8 @@
         "classmap": [
             "tests/PHPUnit"
         ]
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.9"
     }
 }
