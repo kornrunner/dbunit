@@ -24,7 +24,7 @@
     },
     "require": {
         "php": "^8.1",
-        "phpunit/phpunit": "^10.5 || ^11.0",
+        "phpunit/phpunit": "^10.5 || ^11.0 || ^12.0",
         "symfony/yaml": "^3.0 || ^4.0 || ^5.0 || ^6.0 || ^7.0",
         "ext-pdo": "*",
         "ext-simplexml": "*"
@@ -38,13 +38,5 @@
         "classmap": [
             "tests/PHPUnit"
         ]
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "4.1-dev"
-        }
-    },
-    "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.52"
     }
 }
