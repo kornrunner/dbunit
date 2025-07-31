@@ -23,24 +23,26 @@ class DeleteReset implements Operation
 {
     public function execute(Connection $connection, IDataSet $dataSet): void
     {
-        $sql = !$this->isMysql($connection)
-            ? 'DELETE FROM %1$s; ALTER TABLE %1$s AUTOINCREMENT=1;'
-            : 'DELETE FROM %1$s; ALTER TABLE %1$s AUTO_INCREMENT=1;';
+        $delete_stmnt = 'DELETE FROM %1$s;';
+        $reset_stmnt = $this->getResetSequenceStatement($connection);
 
         foreach ($dataSet->getReverseIterator() as $table) {
             /* @var $table ITable */
             $tname = $connection->quoteSchemaObject($table->getTableMetaData()->getTableName());
-            $query = sprintf($sql, $tname);
+            $delete_query = sprintf($delete_stmnt, $tname);
+            $reset_query = sprintf($reset_stmnt, $tname);
 
             try {
                 $this->disableForeignKeyChecksForMysql($connection);
-                $connection->getConnection()->query($query);
+                $c = $connection->getConnection();
+                $c->query($delete_query);
+                $c->query($reset_query);
                 $this->enableForeignKeyChecksForMysql($connection);
             } catch (\Exception $e) {
                 $this->enableForeignKeyChecksForMysql($connection);
 
                 if ($e instanceof PDOException) {
-                    throw new Exception('DELETE - RESET', $query, [], $table, $e->getMessage());
+                    throw new Exception('DELETE - RESET', "$delete_query $reset_query", [], $table, $e->getMessage());
                 }
 
                 throw $e;
@@ -48,11 +50,28 @@ class DeleteReset implements Operation
         }
     }
 
+    private function getResetSequenceStatement(Connection $connection): string
+    {
+        switch($connection->getConnection()->getAttribute(PDO::ATTR_DRIVER_NAME)) {
+            case 'mysql':
+                $statement = 'ALTER TABLE %1$s AUTO_INCREMENT = 1;';
+                break;
+            case 'sqlite':
+                $statement = 'DELETE FROM sqlite_sequence WHERE name=%1$s;';
+                break;
+            default:
+                $statement = 'ALTER TABLE %1$s AUTO_INCREMENT = 1;';
+        }
+
+        return $statement;
+    }
+
     private function disableForeignKeyChecksForMysql(Connection $connection): void
     {
         if ($this->isMysql($connection)) {
-            $connection->getConnection()->query('SET @PHPUNIT_OLD_FOREIGN_KEY_CHECKS = @@FOREIGN_KEY_CHECKS');
-            $connection->getConnection()->query('SET FOREIGN_KEY_CHECKS = 0');
+            $c = $connection->getConnection();
+            $c->query('SET @PHPUNIT_OLD_FOREIGN_KEY_CHECKS = @@FOREIGN_KEY_CHECKS');
+            $c->query('SET FOREIGN_KEY_CHECKS = 0');
         }
     }
 
