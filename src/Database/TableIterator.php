@@ -79,7 +79,7 @@ class TableIterator implements ITableIterator
      *
      * @return ITable
      */
-    public function current()
+    public function current(): mixed
     {
         $tableName = current($this->tableNames);
 
@@ -91,7 +91,7 @@ class TableIterator implements ITableIterator
      *
      * @return string
      */
-    public function key()
+    public function key(): mixed
     {
         return $this->current()->getTableMetaData()->getTableName();
     }
@@ -125,7 +125,7 @@ class TableIterator implements ITableIterator
      *
      * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
         return current($this->tableNames) !== false;
     }
