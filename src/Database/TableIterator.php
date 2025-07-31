@@ -122,8 +122,6 @@ class TableIterator implements ITableIterator
 
     /**
      * Returns true if the current index is valid.
-     *
-     * @return bool
      */
     public function valid(): bool
     {

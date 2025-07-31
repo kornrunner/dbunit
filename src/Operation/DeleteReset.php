@@ -24,13 +24,13 @@ class DeleteReset implements Operation
     public function execute(Connection $connection, IDataSet $dataSet): void
     {
         $delete_stmnt = 'DELETE FROM %1$s;';
-        $reset_stmnt = $this->getResetSequenceStatement($connection);
+        $reset_stmnt  = $this->getResetSequenceStatement($connection);
 
         foreach ($dataSet->getReverseIterator() as $table) {
             /* @var $table ITable */
-            $tname = $connection->quoteSchemaObject($table->getTableMetaData()->getTableName());
+            $tname        = $connection->quoteSchemaObject($table->getTableMetaData()->getTableName());
             $delete_query = sprintf($delete_stmnt, $tname);
-            $reset_query = sprintf($reset_stmnt, $tname);
+            $reset_query  = sprintf($reset_stmnt, $tname);
 
             try {
                 $this->disableForeignKeyChecksForMysql($connection);
@@ -42,7 +42,7 @@ class DeleteReset implements Operation
                 $this->enableForeignKeyChecksForMysql($connection);
 
                 if ($e instanceof PDOException) {
-                    throw new Exception('DELETE - RESET', "$delete_query $reset_query", [], $table, $e->getMessage());
+                    throw new Exception('DELETE - RESET', "{$delete_query} {$reset_query}", [], $table, $e->getMessage());
                 }
 
                 throw $e;
@@ -52,13 +52,17 @@ class DeleteReset implements Operation
 
     private function getResetSequenceStatement(Connection $connection): string
     {
-        switch($connection->getConnection()->getAttribute(PDO::ATTR_DRIVER_NAME)) {
+        switch ($connection->getConnection()->getAttribute(PDO::ATTR_DRIVER_NAME)) {
             case 'mysql':
                 $statement = 'ALTER TABLE %1$s AUTO_INCREMENT = 1;';
+
                 break;
+
             case 'sqlite':
                 $statement = 'DELETE FROM sqlite_sequence WHERE name=%1$s;';
+
                 break;
+
             default:
                 $statement = 'ALTER TABLE %1$s AUTO_INCREMENT = 1;';
         }
