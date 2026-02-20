@@ -9,9 +9,6 @@
  */
 namespace PHPUnit\DbUnit\Constraint;
 
-use function get_class_methods;
-use function get_parent_class;
-use function in_array;
 use function sprintf;
 use PHPUnit\Framework\Constraint\Constraint;
 
@@ -35,9 +32,6 @@ class TableRowCount extends Constraint
      */
     public function __construct($tableName, $value)
     {
-        if (in_array('__construct', get_class_methods(get_parent_class($this)), true)) {
-            parent::__construct();
-        }
         $this->tableName = $tableName;
         $this->value     = $value;
     }

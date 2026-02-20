@@ -9,9 +9,6 @@
  */
 namespace PHPUnit\DbUnit\Constraint;
 
-use function get_class_methods;
-use function get_parent_class;
-use function in_array;
 use function sprintf;
 use PHPUnit\DbUnit\DataSet\ITable;
 use PHPUnit\DbUnit\InvalidArgumentException;
@@ -37,9 +34,6 @@ class TableIsEqual extends Constraint
      */
     public function __construct(ITable $value)
     {
-        if (in_array('__construct', get_class_methods(get_parent_class($this)), true)) {
-            parent::__construct();
-        }
         $this->value = $value;
     }
 
